@@ -34,7 +34,7 @@ const ConsumptionSchema = new Schema<ConsumptionDocument>(
   }
 );
 
-export const ConsommationModel = model<ConsumptionDocument>(
-  "Consommation",
+export const ConsumptionModel = model<ConsumptionDocument>(
+  "Consumption",
   ConsumptionSchema
 );
