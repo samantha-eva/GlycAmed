@@ -95,3 +95,60 @@ export interface SearchProductDTO {
   barcode?: string;
   name?: string;
 }
+
+// ========================================
+// DTOs pour les CONSOMMATIONS
+// ========================================
+
+/**
+ * DTO pour créer une consommation
+ * Version SIMPLIFIÉE : seuls barcode et quantity sont requis
+ * Le reste est automatiquement récupéré depuis Open Food Facts
+ */
+export interface CreateConsumptionDTO {
+  barcode: string;
+  name: string;
+  quantity: number; // en ml ou g
+  place?: string;
+  note?: string;
+  when?: Date; // Optionnel, par défaut maintenant
+}
+
+/**
+ * DTO de réponse d'une consommation
+ */
+export interface ConsumptionResponseDTO {
+  id: string;
+  contributor: {
+    id: string;
+    name: string;
+    surname: string;
+  };
+  product: {
+    name: string;
+    barcode: string;
+    brand?: string;
+    image_url?: string;
+  };
+  quantity: number;
+  nutrients: {
+    calories: number;
+    sugar: number;
+    caffeine: number;
+  };
+  place?: string;
+  note?: string;
+  when: Date;
+  created_at: Date;
+}
+
+/**
+ * DTO pour mettre à jour une consommation
+ */
+export interface UpdateConsumptionDTO {
+  quantity?: number;
+  place?: string;
+  note?: string;
+  when?: Date;
+}
+

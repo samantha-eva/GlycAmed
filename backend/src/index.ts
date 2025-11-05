@@ -5,6 +5,7 @@ import { connectDB } from './config/database';
 import  authRoutes  from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import productRoutes from './routes/product.routes';
+import consumptionRoutes from "./routes/consumption.routes";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/consumptions', consumptionRoutes);
 
 // Start server
 const startServer = async () => {
