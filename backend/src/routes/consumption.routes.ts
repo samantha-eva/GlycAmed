@@ -15,6 +15,8 @@ router.use(authMiddleware);
  */
 router.post("/", consumptionController.createConsumption.bind(consumptionController));
 
+router.get("/", consumptionController.getAllConsumptions.bind(consumptionController));
+
 /**
  * GET /api/consumptions/:id
  * Récupérer une consommation spécifique
@@ -33,5 +35,25 @@ router.put("/:id", consumptionController.updateConsumption.bind(consumptionContr
  * Supprimer une consommation (seulement ses propres contributions)
  */
 router.delete("/:id", consumptionController.deleteConsumption.bind(consumptionController));
+
+
+/**
+ * GET /api/consumptions/nutrients/sugar
+ * Récupérer uniquement les valeurs de sucre de toutes les consommations
+ */
+router.get("/nutrients/sugar", consumptionController.getSugarData.bind(consumptionController));
+
+/**
+ * GET /api/consumptions/nutrients/caffeine
+ * Récupérer uniquement les valeurs de caféine de toutes les consommations
+ */
+router.get("/nutrients/caffeine", consumptionController.getCaffeineData.bind(consumptionController));
+
+/**
+ * GET /api/consumptions/nutrients/calories
+ * Récupérer uniquement les valeurs de calories de toutes les consommations
+ */
+router.get("/nutrients/calories", consumptionController.getCaloriesData.bind(consumptionController));
+
 
 export default router;

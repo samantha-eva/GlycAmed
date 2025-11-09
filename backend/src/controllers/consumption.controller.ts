@@ -3,6 +3,7 @@ import { ConsumptionService } from "../services/consumption.service";
 import {
   CreateConsumptionDTO,
   UpdateConsumptionDTO,
+  PeriodFilter,
 } from "../types/dtos";
 
 const consumptionService = new ConsumptionService();
@@ -152,6 +153,83 @@ export class ConsumptionController {
       console.error("Erreur suppression consommation:", error);
       res.status(500).json({
         error: "Erreur lors de la suppression de la consommation",
+      });
+    }
+  }
+
+  /**
+   * GET /api/consumptions
+   * Récupérer toutes les consommations avec filtres optionnels
+   * Query params: period (today|week|month|6months|year)
+   */
+  async getAllConsumptions(req: Request, res: Response): Promise<void> {
+    try {
+      const period = req.query.period as PeriodFilter | undefined;
+      
+      // Validation du paramètre period
+      const validPeriods: PeriodFilter[] = ['today', 'week', 'month', '6months', 'year'];
+      if (period && !validPeriods.includes(period)) {
+        res.status(400).json({
+          error: "Période invalide. Valeurs acceptées: today, week, month, 6months, year"
+        });
+        return;
+      }
+      
+      const consumptions = await consumptionService.getConsumptions(period);
+      
+      res.status(200).json(consumptions);
+    } catch (error) {
+      console.error("Erreur récupération consommations:", error);
+      res.status(500).json({
+        error: "Erreur lors de la récupération des consommations",
+      });
+    }
+  }
+
+  /**
+   * GET /api/consumptions/nutrients/sugar
+   * Récupérer uniquement les valeurs de sucre
+   */
+  async getSugarData(_req: Request, res: Response): Promise<void> {
+    try {
+      const sugarData = await consumptionService.getNutrientData("sugar");
+      res.status(200).json(sugarData);
+    } catch (error) {
+      console.error("Erreur récupération données sucre:", error);
+      res.status(500).json({
+        error: "Erreur lors de la récupération des données de sucre",
+      });
+    }
+  }
+
+  /**
+   * GET /api/consumptions/nutrients/caffeine
+   * Récupérer uniquement les valeurs de caféine
+   */
+  async getCaffeineData(_req: Request, res: Response): Promise<void> {
+    try {
+      const caffeineData = await consumptionService.getNutrientData("caffeine");
+      res.status(200).json(caffeineData);
+    } catch (error) {
+      console.error("Erreur récupération données caféine:", error);
+      res.status(500).json({
+        error: "Erreur lors de la récupération des données de caféine",
+      });
+    }
+  }
+
+  /**
+   * GET /api/consumptions/nutrients/calories
+   * Récupérer uniquement les valeurs de calories
+   */
+  async getCaloriesData(_req: Request, res: Response): Promise<void> {
+    try {
+      const caloriesData = await consumptionService.getNutrientData("calories");
+      res.status(200).json(caloriesData);
+    } catch (error) {
+      console.error("Erreur récupération données calories:", error);
+      res.status(500).json({
+        error: "Erreur lors de la récupération des données de calories",
       });
     }
   }

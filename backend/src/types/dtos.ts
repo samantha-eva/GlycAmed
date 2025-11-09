@@ -152,3 +152,52 @@ export interface UpdateConsumptionDTO {
   when?: Date;
 }
 
+// ========================================
+// NOUVEAUX DTOs pour les filtres et nutriments
+// ========================================
+
+/**
+ * Type littéral pour les périodes de filtrage
+ */
+export type PeriodFilter = 'today' | 'week' | 'month' | '6months' | 'year';
+
+/**
+ * DTO pour les paramètres de query des consommations
+ */
+export interface ConsumptionQueryDTO {
+  period?: PeriodFilter;
+}
+
+/**
+ * DTO pour les données de nutriments
+ */
+export interface NutrientDataDTO {
+  value: number;
+  date: Date;
+  name: string;
+}
+
+/**
+ * DTO pour la liste des consommations simplifiée
+ */
+export interface ConsumptionListItemDTO {
+  id: string;
+  name: string;
+  quantity: number;
+  calories: number;
+  sugar: number;
+  caffeine: number;
+  note?: string;
+  place: string;
+  when: Date;
+  created_at: Date;
+  contributor?: {
+    name: string;
+    surname: string;
+  };
+}
+
+/**
+ * Type pour les nutriments possibles
+ */
+export type NutrientType = 'sugar' | 'caffeine' | 'calories';

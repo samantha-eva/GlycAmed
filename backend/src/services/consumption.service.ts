@@ -6,11 +6,15 @@ import {
   CreateConsumptionDTO,
   ConsumptionResponseDTO,
   UpdateConsumptionDTO,
+  PeriodFilter,
+  NutrientDataDTO,
+  NutrientType,
+  ConsumptionListItemDTO
 } from "../types/dtos";
 
 // Limites OMS
-const MAX_SUGAR_PER_DAY = 50; // grammes
-const MAX_CAFFEINE_PER_DAY = 400; // milligrammes
+//const MAX_SUGAR_PER_DAY = 50; // grammes
+//const MAX_CAFFEINE_PER_DAY = 400; // milligrammes
 
 export class ConsumptionService {
  
@@ -146,6 +150,108 @@ export class ConsumptionService {
     }
 
     await ConsumptionModel.findByIdAndDelete(id);
+  }
+
+  /**
+   * Récupérer les consommations avec filtre de période
+   */
+  async getConsumptions(period?: PeriodFilter): Promise<ConsumptionListItemDTO[]> {
+    const now = new Date();
+    let startDate: Date;
+
+    switch (period) {
+      case "today":
+        // Début de la journée (00:00:00)
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        break;
+      
+      case "week":
+        // 7 jours en arrière
+        startDate = new Date(now);
+        startDate.setDate(startDate.getDate() - 7);
+        break;
+      
+      case "month":
+        // 1 mois en arrière
+        startDate = new Date(now);
+        startDate.setMonth(startDate.getMonth() - 1);
+        break;
+      
+      case "6months":
+        // 6 mois en arrière
+        startDate = new Date(now);
+        startDate.setMonth(startDate.getMonth() - 6);
+        break;
+      
+      case "year":
+        // 1 an en arrière
+        startDate = new Date(now);
+        startDate.setFullYear(startDate.getFullYear() - 1);
+        break;
+      
+      default:
+        // Pas de filtre, retourner tout
+        const allConsumptions = await ConsumptionModel.find()
+          .populate("users_id", "name surname")
+          .select("name quantity calories sugar caffeine note place when created_at")
+          .sort({ created_at: -1 })
+          .exec();
+        
+        return this.mapToConsumptionListDTO(allConsumptions);
+    }
+
+    // Filtrer par période
+    const consumptions = await ConsumptionModel.find({
+      created_at: { $gte: startDate, $lte: now }
+    })
+      .populate("users_id", "name surname")
+      .select("name quantity calories sugar caffeine note place when created_at")
+      .sort({ created_at: -1 })
+      .exec();
+    
+    return this.mapToConsumptionListDTO(consumptions);
+  }
+
+  /**
+   * Mapper les documents Mongoose vers DTOs
+   */
+  private mapToConsumptionListDTO(consumptions: ConsumptionDocument[]): ConsumptionListItemDTO[] {
+    return consumptions.map(consumption => {
+      const userDoc = consumption.users_id as any;
+      
+      return {
+        id: consumption._id.toString(),
+        name: consumption.name,
+        quantity: consumption.quantity,
+        calories: consumption.calories,
+        sugar: consumption.sugar,
+        caffeine: consumption.caffeine,
+        note: consumption.note,
+        place: consumption.place,
+        when: consumption.when,
+        created_at: consumption.created_at,
+        contributor: userDoc ? {
+          name: userDoc.name,
+          surname: userDoc.surname
+        } : undefined
+      };
+    });
+  }
+
+  /**
+   * Récupérer uniquement les données d'un nutriment spécifique
+   */
+  async getNutrientData(nutrient: NutrientType): Promise<NutrientDataDTO[]> {
+    const consumptions = await ConsumptionModel.find()
+      .select(`${nutrient} name created_at`)
+      .sort({ created_at: -1 })
+      .exec();
+
+    return consumptions.map(consumption => ({
+      value: consumption[nutrient],
+      date: consumption.created_at,
+      name: consumption.name
+    }));
   }
 
 }
