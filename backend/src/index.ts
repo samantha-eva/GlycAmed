@@ -6,6 +6,7 @@ import  authRoutes  from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import productRoutes from './routes/product.routes';
 import consumptionRoutes from "./routes/consumption.routes";
+import dashboardRoutes from "./routes/dashboard.routes";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/consumptions', consumptionRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // Start server
 const startServer = async () => {

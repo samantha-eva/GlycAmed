@@ -201,3 +201,22 @@ export interface ConsumptionListItemDTO {
  * Type pour les nutriments possibles
  */
 export type NutrientType = 'sugar' | 'caffeine' | 'calories';
+
+// DashboardDTO
+export interface DashboardDTO {
+  sugar: {
+    current: number;
+    limit: number;
+    percentage: number;
+    exceeded: boolean;
+  };
+  caffeine: {
+    current: number;
+    limit: number;
+    percentage: number;
+    exceeded: boolean;
+  };
+  calories: number;
+  contributionsCount: number;
+  status: "safe" | "warning" | "danger";
+}
