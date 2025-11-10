@@ -220,3 +220,19 @@ export interface DashboardDTO {
   contributionsCount: number;
   status: "safe" | "warning" | "danger";
 }
+
+// FeedItemDTO
+export interface FeedItemDTO {
+  id: string;
+  contributor: string;
+  productName: string;
+  quantity: number;
+  place: string;
+  timeAgo: string;
+  nutrients: {
+    sugar: number;
+    caffeine: number;
+    calories: number;
+  };
+  created_at: Date;
+}
