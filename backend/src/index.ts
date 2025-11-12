@@ -8,6 +8,7 @@ import productRoutes from './routes/product.routes';
 import consumptionRoutes from "./routes/consumption.routes";
 import dashboardRoutes from "./routes/dashboard.routes";
 import feedRoutes from "./routes/feed.routes";
+import statsRoutes from "./routes/stats.routes";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/consumptions', consumptionRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/feed", feedRoutes);
+app.use("/api/stats", statsRoutes);
 
 // Start server
 const startServer = async () => {

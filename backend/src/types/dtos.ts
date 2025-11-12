@@ -236,3 +236,25 @@ export interface FeedItemDTO {
   };
   created_at: Date;
 }
+
+// StatsDTO
+export interface StatsDTO {
+  period: PeriodFilter;
+  charts: {
+    sugar: {
+      labels: string[];
+      values: number[];
+    };
+    caffeine: {
+      labels: string[];
+      values: number[];
+    };
+  };
+  aggregates: {
+    avgDailySugar: number;
+    avgDailyCaffeine: number;
+    totalCalories: number;
+    daysExceeded: number;
+    totalDays: number;
+  }
+}
