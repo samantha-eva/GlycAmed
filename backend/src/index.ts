@@ -1,19 +1,31 @@
+
 import express from 'express';
-import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database';
+import  authRoutes  from './routes/auth.routes';
+import userRoutes from './routes/user.routes';
+import productRoutes from './routes/product.routes';
+import consumptionRoutes from "./routes/consumption.routes";
+import dashboardRoutes from "./routes/dashboard.routes";
+import feedRoutes from "./routes/feed.routes";
+import statsRoutes from "./routes/stats.routes";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
 
-// Middlewares
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/consumptions', consumptionRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/feed", feedRoutes);
+app.use("/api/stats", statsRoutes);
 
 // Start server
 const startServer = async () => {

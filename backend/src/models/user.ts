@@ -1,7 +1,10 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
 import { ConsumptionDocument } from "./consumption";
+import bcrypt from "bcrypt";
+
 
 export interface UserDocument extends Document {
+  _id: Types.ObjectId;
   name: string;
   surname: string;
   email: string;
@@ -23,8 +26,21 @@ const UserSchema = new Schema<UserDocument>(
   }
 );
 
+
+// Hook pour hasher le password AVANT de sauvegarder
+UserSchema.pre('save', async function(next) {
+  // Si le password n'a pas été modifié, on ne le rehash pas
+  if (!this.isModified('password')) {
+    return next();
+  }
+  
+  // Hasher le password avec bcrypt (coût : 10)
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
 // Relation
-UserSchema.virtual("consumption", {
+UserSchema.virtual("consumptions", {  
   ref: "Consumption",
   localField: "_id",
   foreignField: "users_id",
