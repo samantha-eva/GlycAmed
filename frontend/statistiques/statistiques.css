@@ -1,0 +1,29 @@
+.buttons{
+    display: flex;
+    gap: 3px;
+    width: 95%;
+}
+
+.buttons:first-child{
+    border-radius: 0 0 var(--radius) 0;
+}
+
+.buttons:last-child{
+    border-radius: 0 0 0 var(--radius);
+}
+
+.buttons-cafe > button{
+    background-color: var(--danger);
+}
+
+.buttons-calorie > button{
+    background-color: var(--secondary);
+}
+
+.titre{
+    margin-bottom: 2rem;
+}
+
+h2{
+    text-decoration: underline;
+}
