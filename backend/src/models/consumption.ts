@@ -2,6 +2,7 @@ import { Schema, model, Document, Types } from "mongoose";
 import { UserDocument } from "./user";
 
 export interface ConsumptionDocument extends Document {
+  _id: Types.ObjectId | ConsumptionDocument;
   users_id: Types.ObjectId | UserDocument;
   name: string;
   calories: number;
@@ -34,7 +35,7 @@ const ConsumptionSchema = new Schema<ConsumptionDocument>(
   }
 );
 
-export const ConsommationModel = model<ConsumptionDocument>(
-  "Consommation",
+export const ConsumptionModel = model<ConsumptionDocument>(
+  "Consumption",
   ConsumptionSchema
 );
