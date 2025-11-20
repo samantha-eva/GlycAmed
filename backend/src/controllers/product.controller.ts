@@ -2,9 +2,35 @@ import { Request, Response } from 'express';
 import { OpenFoodFactsService } from '../services/openfoodfacts.service';
 
 export class ProductController {
-  
   /**
-   * GET /api/products/search/:barcode
+   * GET /api/products/search?name=...
+   * Rechercher des produits par nom
+   */
+  static async searchByName(req: Request, res: Response): Promise<void> {
+    try {
+      const { name } = req.query;
+
+      // Validation
+      if (!name || typeof name !== 'string' || name.trim().length === 0) {
+        res.status(400).json({ error: 'Nom du produit requis' });
+        return;
+      }
+
+      // Recherche des produits
+      const products = await OpenFoodFactsService.searchByName(name);
+
+      res.status(200).json({ 
+        count: products.length,
+        products 
+      });
+    } catch (error) {
+      console.error('Erreur recherche produit:', error);
+      res.status(404).json({ error: (error as Error).message });
+    }
+  }
+
+  /**
+   * GET /api/products/barcode/:barcode
    * Rechercher un produit par code-barres
    */
   static async searchByBarcode(req: Request, res: Response): Promise<void> {
@@ -33,20 +59,31 @@ export class ProductController {
    */
   static async calculateNutriments(req: Request, res: Response): Promise<void> {
     try {
-      const { barcode, quantity } = req.body;
+      const { barcode, name, quantity } = req.body;
 
-      if (!barcode || !quantity) {
-        res.status(400).json({ error: 'Code-barres et quantité requis' });
+      // Validation
+      if (!quantity || quantity <= 0) {
+        res.status(400).json({ error: 'Quantité valide requise (> 0)' });
         return;
       }
 
-      if (quantity <= 0) {
-        res.status(400).json({ error: 'La quantité doit être supérieure à 0' });
+      let product;
+
+      // Rechercher par code-barres OU par nom
+      if (barcode) {
+        product = await OpenFoodFactsService.searchByBarcode(barcode);
+      } else if (name) {
+        const products = await OpenFoodFactsService.searchByName(name);
+        if (products.length === 0) {
+          res.status(404).json({ error: 'Aucun produit trouvé' });
+          return;
+        }
+        // Prendre le premier résultat
+        product = products[0];
+      } else {
+        res.status(400).json({ error: 'Code-barres ou nom du produit requis' });
         return;
       }
-
-      // Rechercher le produit
-      const product = await OpenFoodFactsService.searchByBarcode(barcode);
 
       // Calculer les nutriments
       const nutriments = OpenFoodFactsService.calculateNutriments(product, quantity);
