@@ -7,6 +7,9 @@ const router = Router();
 // Toutes les routes nécessitent une authentification
 router.use(authMiddleware);
 
+//GET /api/products/search/:name
+router.get('/search', ProductController.searchByName);
+
 // GET /api/products/search/:barcode
 router.get('/search/:barcode', ProductController.searchByBarcode);
 
