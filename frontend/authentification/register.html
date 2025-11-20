@@ -26,33 +26,95 @@
                 <h1>Glycamed</h1>
             </a>
             <ul>
-                <li><a href="/">Accueil</a></li>
-                <li><a href="#">Connexion</a></li>
+                <li><a href="/index.html">Accueil</a></li>
+                <li><a href="/authentification/login.html">Connexion</a></li>
                 <li><a href="#">Rapport</a></li>
-                <li><a href="#">Statistiques</a></li>
+                <li><a href="/statistiques.html">Statistiques</a></li>
                 <li><a href="#">Historique</a></li>
                 <li><a href="#">Bilan de santé</a></li>
             </ul>
         </nav>
     </header>
-    <form action="">
+    <form id="registerForm">
         <h2>Make a debut!</h2>
+
+        <input type="hidden" name="name" value="name">
+        <input type="hidden" name="surname" value="surname">
+
         <div class="labelinput">
             <label for="email">Email</label>
-            <input type="email" name="email" id="email" placeholder="amed@my-digital-school.org">
+            <input type="email" id="email" placeholder="amed@my-digital-school.org">
         </div>
         <div class="labelinput">
             <label for="password">Mot de passe</label>
-            <input type="password" name="password" id="password" placeholder="monsupermotdepasse123*">
+            <input type="password" id="password" placeholder="monsupermotdepasse123*">
         </div>
         <div class="labelinput">
-            <label for="password">Confirmation du mot de passe</label>
-            <input type="password" name="password" id="password" placeholder="monsupermotdepasse123*">
+            <label for="confirm-password">Confirmation du mot de passe</label>
+            <input type="password" id="confirm-password" placeholder="monsupermotdepasse123*">
         </div>
-        <a href="/frontend/authentification/login.html">Vous possédez déjà un compte ? Connectez-vous ici !</a>
+
+        <a href="/authentification/login.html">Vous possédez déjà un compte ? Connectez-vous ici !</a>
+
         <button type="submit">S'inscrire</button>
+
+        <p id="errorMessage" style="color:red; margin-top:1rem;"></p>
     </form>
 
     <script src="../js/header.js"></script>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const errorMessage = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm-password').value;
+
+            errorMessage.textContent = "";
+
+            if (password !== confirm) {
+                errorMessage.textContent = "Les mots de passe ne correspondent pas.";
+                return;
+            }
+
+            const data = {
+                name: "name",
+                surname: "surname",
+                email,
+                password
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    errorMessage.textContent = result.message || "Une erreur est survenue.";
+                    return;
+                }
+
+                // ✅ Stocke le JWT
+                localStorage.setItem("token", result.token);
+
+                // Redirection (facultative)
+                window.location.href = "/index.html";
+                
+            } catch (err) {
+                errorMessage.textContent = "Impossible de se connecter au serveur.";
+                console.error(err);
+            }
+        });
+    </script>
 </body>
 </html>
