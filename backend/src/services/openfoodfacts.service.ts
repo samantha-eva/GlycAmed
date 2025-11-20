@@ -11,7 +11,6 @@ export class OpenFoodFactsService {
    */
   static async searchByName(productName: string): Promise<ProductSearchResultDTO[]> {
     try {
-      console.log(`🔍 Recherche de produits avec le nom: ${productName}`);
 
       const response = await axios.get(this.SEARCH_URL, {
         params: {
@@ -22,7 +21,7 @@ export class OpenFoodFactsService {
         headers: {
           'User-Agent': this.USER_AGENT,
         },
-        timeout: 70000, // 15 secondes
+        timeout: 70000,
       });
 
       const data = response.data;
@@ -35,8 +34,6 @@ export class OpenFoodFactsService {
       if (!data.products || data.products.length === 0) {
         throw new Error('Aucun produit trouvé');
       }
-
-      console.log(`✅ ${data.products.length} produit(s) trouvé(s)`);
 
       // Transformer les résultats en filtrant les produits invalides
       return data.products
@@ -78,8 +75,7 @@ export class OpenFoodFactsService {
    */
   static async searchByBarcode(barcode: string): Promise<ProductSearchResultDTO> {
     try {
-      console.log(`🔍 Recherche du produit avec code-barres: ${barcode}`);
-      
+        
       const url = `${this.BASE_URL}/product/${barcode}.json`;
       const response = await axios.get<OpenFoodFactsResponse>(url, {
         headers: {
@@ -104,8 +100,6 @@ export class OpenFoodFactsService {
       const calories100g = nutriments['energy-kcal_100g'] || nutriments['energy-kcal'] || 0;
       const sugar100g = nutriments['sugars_100g'] || nutriments.sugars || 0;
       const caffeine100g = nutriments['caffeine_100g'] || nutriments.caffeine || 0;
-
-      console.log(`✅ Produit trouvé: ${productName}`);
 
       return {
         barcode,
