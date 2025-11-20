@@ -22,6 +22,58 @@
         .error{
             color: var(--danger);
         }
+
+        .modal-container{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .modal-container > div{
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: center;
+            border-radius: var(--radius);
+            border: 1px var(--accent) solid;
+
+            padding: 0.5rem;
+            box-sizing: border-box;
+            width: 45%;
+            height: 100%;
+            max-width: 300px;
+
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-container > div:hover{
+            background-color: #f2f2f0;
+        }
+
+        .modal-container img{
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+        }
+
+        .historique-container{
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: left;
+            width: 100%;
+        }
+
+        .historique-container > div:not(:last-child){
+            border-bottom: var(--accent) 2px solid;
+            width: 100%;
+            padding: 0.5rem 0;
+        }
     </style>
 </head>
 <body>
@@ -50,35 +102,44 @@
         </nav>
     </header>
     
-    <h2 class="titre"> Rapport : </h2>
-    
-    <form id="productForm">
-        <div class="labelinput">
-            <label for="product">Nom du produit</label>
-            <input type="text" placeholder="Coca-cola zero 33cl" id="product" name="product"    >
-        </div>
-        <p class="error"></p>
-        <!--
+    <section>
+        <h2 class="titre"> Rapport : </h2>
+            
+        <form id="productForm">
             <div class="labelinput">
-                <label for="place">Lieu de consommation</label>
-                <input type="text" placeholder="Salle 4" id="place" name="place">
+                <label for="product">Nom du produit</label>
+                <input type="text" placeholder="Coca-cola zero 33cl" id="product" name="product"    >
             </div>
-            <div class="labelinput">
-                <label for="note">Note</label>
-                <input type="text" placeholder="Amed semblait malade" id="note">
+            <p class="error"></p>
+            <!--
+                <div class="labelinput">
+                    <label for="place">Lieu de consommation</label>
+                    <input type="text" placeholder="Salle 4" id="place" name="place">
+                </div>
+                <div class="labelinput">
+                    <label for="note">Note</label>
+                    <input type="text" placeholder="Amed semblait malade" id="note">
+                </div>
+            -->
+
+            
+            <div style="width:70%; margin: 1rem auto;">
+                <button type="button"onclick="rechercherProduit()">Rechercher le produit</button>
             </div>
-        -->
-
-
-        <div style="width:70%; margin: 1rem auto;">
-            <button type="button"onclick="rechercherProduit()">Rechercher le produit</button>
-        </div>
-    </form>
+        </form>
+    </section>
 
     <section class="modal">
         <button class="modal-cross" onclick="closeModal()"> X </button>
         <div class="modal-content">
             Chargement en cours...
+        </div>
+    </section>
+
+    <section>
+        <h2>Ajouts récents :</h2>
+        <div class="historique-container">
+
         </div>
     </section>
 
