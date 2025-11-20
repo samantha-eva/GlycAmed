@@ -9,13 +9,15 @@
     <link rel="stylesheet" href="global.css">
     <title>Glycamed</title>
     <style>
-        .section-graphe{
-            margin-top: 5rem;
+        h2{
+            margin-bottom: 1rem;
         }
-        .charts{
+
+        form{
             display: flex;
             flex-direction: column;
-            gap: 5rem;}
+            gap: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -36,42 +38,35 @@
             <ul>
                 <li><a href="/index.html">Accueil</a></li>
                 <li><a href="/authentification/login.html">Connexion</a></li>
-                <li><a href="/rapport.html">Rapport</a></li>
+                <li><a href="#">Rapport</a></li>
                 <li><a href="/statistiques.html">Statistiques</a></li>
                 <li><a href="#">Historique</a></li>
                 <li><a href="#">Bilan de santé</a></li>
             </ul>
         </nav>
     </header>
-    <section class="section-titre">
-        <h2>Bienvenue sur Glycamed</h2>
-        <p>Contrôler la consommation de sucre, de caféïne et de calorie de votre Amed. Essayez de le convaincre d'éviter le diabète en rapportant chacune de ses consommations.</p>
-
-        
-        <a href="">
-            <button>Je balance mon Amed.</button>
-        </a>
-    </section>
-    <section class="section-graphe">
-        <h2> Observer les données de votre Amed :</h2>
-        <div class="charts">
-            <h3>Consommation de sucre sur la semaine :</h3>
-            <div>
-                <canvas id="myChart"></canvas>
-            </div>
-            <h3>Consommation de caféïne sur la semaine :</h3>
-            <div>
-                <canvas id="myPieChart"></canvas>
-            </div>
-            <h3>Prise de calorie sur la semaine :</h3>
-            <div>
-                <canvas id="myLineChart"></canvas>
-            </div>
+    
+    <h2 class="titre"> Rapport : </h2>
+    
+    <form action="">
+        <div class="labelinput">
+            <label for="product">Nom du produit :</label>
+            <input type="text" placeholder="Coca-cola zero 33cl" id="product" name="product">
         </div>
-        <a href="" style="width: 70%; margin: 1rem auto;">
-            <button>Voir ses stats avancées</button>
-        </a>
-    </section>
+        <div class="labelinput">
+            <label for="place">Lieu de consommation :</label>
+            <input type="text" placeholder="Salle 4" id="place" name="place">
+        </div>
+        <div class="labelinput">
+            <label for="note">Note :</label>
+            <input type="text" placeholder="Amed semblait malade" id="note">
+        </div>
+
+
+        <div style="width:70%; margin: 1rem auto;">
+            <button>Balancer Amed !</button>
+        </div>
+    </form>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/header.js"></script>
