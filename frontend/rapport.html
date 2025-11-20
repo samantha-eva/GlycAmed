@@ -18,6 +18,10 @@
             flex-direction: column;
             gap: 0.5rem;
         }
+
+        .error{
+            color: var(--danger);
+        }
     </style>
 </head>
 <body>
@@ -48,25 +52,35 @@
     
     <h2 class="titre"> Rapport : </h2>
     
-    <form action="">
+    <form id="productForm">
         <div class="labelinput">
-            <label for="product">Nom du produit :</label>
-            <input type="text" placeholder="Coca-cola zero 33cl" id="product" name="product">
+            <label for="product">Nom du produit</label>
+            <input type="text" placeholder="Coca-cola zero 33cl" id="product" name="product"    >
         </div>
-        <div class="labelinput">
-            <label for="place">Lieu de consommation :</label>
-            <input type="text" placeholder="Salle 4" id="place" name="place">
-        </div>
-        <div class="labelinput">
-            <label for="note">Note :</label>
-            <input type="text" placeholder="Amed semblait malade" id="note">
-        </div>
+        <p class="error"></p>
+        <!--
+            <div class="labelinput">
+                <label for="place">Lieu de consommation</label>
+                <input type="text" placeholder="Salle 4" id="place" name="place">
+            </div>
+            <div class="labelinput">
+                <label for="note">Note</label>
+                <input type="text" placeholder="Amed semblait malade" id="note">
+            </div>
+        -->
 
 
         <div style="width:70%; margin: 1rem auto;">
-            <button>Balancer Amed !</button>
+            <button type="button"onclick="rechercherProduit()">Rechercher le produit</button>
         </div>
     </form>
+
+    <section class="modal">
+        <button class="modal-cross" onclick="closeModal()"> X </button>
+        <div class="modal-content">
+            Chargement en cours...
+        </div>
+    </section>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/header.js"></script>

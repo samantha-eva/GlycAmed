@@ -1,21 +1,3 @@
-.labelinput{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-bottom: 16px;
-    gap: 8px;
-}
-
-label{
-    text-decoration: underline;
-}
-
-label::after{
-    content: " :";
-}
-
-
-
 form{
     display: flex;
     flex-direction: column;
