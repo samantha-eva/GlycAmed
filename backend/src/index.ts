@@ -10,6 +10,7 @@ import consumptionRoutes from "./routes/consumption.routes";
 import dashboardRoutes from "./routes/dashboard.routes";
 import feedRoutes from "./routes/feed.routes";
 import statsRoutes from "./routes/stats.routes";
+import leaderboardRoutes from "./routes/leaderboard.routes";
 
 dotenv.config();
 
@@ -32,6 +33,8 @@ app.use('/api/consumptions', consumptionRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/feed", feedRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/leaderboard", leaderboardRoutes);
+
 
 // Start server
 const startServer = async () => {

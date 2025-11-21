@@ -258,3 +258,18 @@ export interface StatsDTO {
     totalDays: number;
   }
 }
+
+// ========================================
+// Top 10 des contributeurs
+// ========================================
+
+// LeaderboardItemDTO
+export interface LeaderboardItemDTO {
+  rank: number;
+  userId: string;
+  name: string;
+  surname: string;
+  contributionsCount: number;
+  lastContribution: Date;
+  badge?: string;
+}
