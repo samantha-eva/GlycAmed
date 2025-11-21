@@ -209,7 +209,7 @@ async function openHistorique(){
             card.classList.add('card');
 
             const product = document.createElement('p');
-            product.textContent = `${consumption.   name} - ${consumption.quantity} ml dans ${consumption.place}, ${consumption.note}`;
+            product.textContent = `${formatDate(consumption.when)} : ${consumption.   name} - ${consumption.quantity} ml dans ${consumption.place}, ${consumption.note}`;
 
             card.appendChild(product);
 
@@ -222,5 +222,18 @@ async function openHistorique(){
         console.error(err.message);
     }
 }
+
+function formatDate(isoString) {
+  const date = new Date(isoString);
+
+  const heures = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const jour = String(date.getDate()).padStart(2, "0");
+  const mois = String(date.getMonth() + 1).padStart(2, "0");
+  const annee = date.getFullYear();
+
+  return `${heures}:${minutes} le ${jour}/${mois}/${annee}`;
+}
+
 
 openHistorique();
