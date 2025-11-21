@@ -168,12 +168,15 @@ function toMilliliters(input) {
   switch (unit) {
     case 'L':
     case 'l':
+    case 'kg':
       return Math.round(value * 1000);
     case 'cL':
     case 'cl':
       return Math.round(value * 10);
     case 'ml':
     case 'mL':
+    case 'g':
+    case 'G':
       return Math.round(value);
     default:
       return 0;
