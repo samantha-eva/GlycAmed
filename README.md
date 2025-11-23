@@ -18,4 +18,14 @@ Chaque étudiant peut contribuer en temps réel pour enregistrer ce qu’il obse
 ## lancement du serveur
 - docker compose up
 
+---
 
+## technologiess
+
+- Docker
+- TypeScript coté backend
+- Node.js et Express
+- Chart JS pour les statistiques
+- HTML/ CSS/ JS pour le frontend
+
+---
