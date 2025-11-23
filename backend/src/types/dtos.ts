@@ -3,8 +3,8 @@
 // ========================================
 
 export interface RegisterDTO {
-  name: string;
-  surname: string;
+  name?: string;
+  surname?: string;
   email: string;
   password: string;
 }
@@ -257,4 +257,19 @@ export interface StatsDTO {
     daysExceeded: number;
     totalDays: number;
   }
+}
+
+// ========================================
+// Top 10 des contributeurs
+// ========================================
+
+// LeaderboardItemDTO
+export interface LeaderboardItemDTO {
+  rank: number;
+  userId: string;
+  name: string;
+  surname: string;
+  contributionsCount: number;
+  lastContribution: Date;
+  badge?: string;
 }

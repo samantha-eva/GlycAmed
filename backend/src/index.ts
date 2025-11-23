@@ -10,13 +10,15 @@ import consumptionRoutes from "./routes/consumption.routes";
 import dashboardRoutes from "./routes/dashboard.routes";
 import feedRoutes from "./routes/feed.routes";
 import statsRoutes from "./routes/stats.routes";
+import leaderboardRoutes from "./routes/leaderboard.routes";
 
 dotenv.config();
 
 const app = express();
 app.use(cors({
-  origin: 'http://localhost:8080',
-  credentials: true
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 const PORT = process.env.PORT;
@@ -32,6 +34,8 @@ app.use('/api/consumptions', consumptionRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/feed", feedRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/leaderboard", leaderboardRoutes);
+
 
 // Start server
 const startServer = async () => {

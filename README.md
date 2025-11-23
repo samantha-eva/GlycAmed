@@ -15,6 +15,18 @@ Chaque étudiant peut contribuer en temps réel pour enregistrer ce qu’il obse
 
 ---
 
-## Installation et lancement
+## lancement du serveur
+- docker compose up
+- http://127.0.0.1:8080/
 
+---
 
+## technologiess
+
+- Docker
+- TypeScript coté backend
+- Node.js et Express
+- Chart JS pour les statistiques
+- HTML/ CSS/ JS pour le frontend
+
+---
