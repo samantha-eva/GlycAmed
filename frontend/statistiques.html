@@ -30,22 +30,21 @@
                 <li><a href="/authentification/login.html">Connexion</a></li>
                 <li><a href="/rapport.html">Rapport</a></li>
                 <li><a href="/statistiques.html">Statistiques</a></li>
-                <li><a href="#">Historique</a></li>
-                <li><a href="#">Bilan de santé</a></li>
+                <!-- <li><a href="#">Bilan de santé</a></li> -->
             </ul>
         </nav>
     </header>
     
-    <h1 class="titre"> Statistiques avancées : </h1>
-
+    
     <section class="sucre section-graphe">
+        <h2 class="titre"> Statistiques avancées : </h2>
         <h2>Consommation de sucre :</h2>
 
         <div class="buttons">
-            <button id="dailySugar" onclick="displaySugar('sugarChartDaily')">Jour</button>
-            <button id="weeklySugar" onclick="displaySugar('sugarChartWeekly')">Semaine</button>
-            <button id="monthlySugar" onclick="displaySugar('sugarChartMonthly')">Mois</button>
-            <button id="annualSugar" onclick="displaySugar('sugarChartAnnual')">Année</button>
+            <button id="dailySugar" onclick="displaySugar('sugarChartDaily')">J</button>
+            <button id="weeklySugar" onclick="displaySugar('sugarChartWeekly')">W</button>
+            <button id="monthlySugar" onclick="displaySugar('sugarChartMonthly')">M</button>
+            <button id="annualSugar" onclick="displaySugar('sugarChartAnnual')">Y</button>
         </div>
 
         <div>
@@ -66,10 +65,10 @@
         <h2>Consommation de caféïne :</h2>
 
         <div class="buttons buttons-cafe">
-            <button id="dailyCafe" onclick="displayCafe('cafeChartDaily')">Jour</button>
-            <button id="weeklyCafe" onclick="displayCafe('cafeChartWeekly')">Semaine</button>
-            <button id="monthlyCafe" onclick="displayCafe('cafeChartMonthly')">Mois</button>
-            <button id="annualCafe" onclick="displayCafe('cafeChartAnnual')">Année</button>
+            <button id="dailyCafe" onclick="displayCafe('cafeChartDaily')">D</button>
+            <button id="weeklyCafe" onclick="displayCafe('cafeChartWeekly')">W</button>
+            <button id="monthlyCafe" onclick="displayCafe('cafeChartMonthly')">M</button>
+            <button id="annualCafe" onclick="displayCafe('cafeChartAnnual')">Y</button>
         </div>
 
         <div>
@@ -90,10 +89,10 @@
         <h2>Consommation de calorie :</h2>
 
         <div class="buttons buttons-calorie">
-            <button id="dailyCalorie" onclick="displayCalorie('calorieChartDaily')">Jour</button>
-            <button id="weeklyCalorie" onclick="displayCalorie('calorieChartWeekly')">Semaine</button>
-            <button id="monthlyCalorie" onclick="displayCalorie('calorieChartMonthly')">Mois</button>
-            <button id="annualCalorie" onclick="displayCalorie('calorieChartAnnual')">Année</button>
+            <button id="dailyCalorie" onclick="displayCalorie('calorieChartDaily')">D</button>
+            <button id="weeklyCalorie" onclick="displayCalorie('calorieChartWeekly')">W</button>
+            <button id="monthlyCalorie" onclick="displayCalorie('calorieChartMonthly')">M</button>
+            <button id="annualCalorie" onclick="displayCalorie('calorieChartAnnual')">Y</button>
         </div>
 
         <div>
@@ -110,6 +109,7 @@
         </div>
     </section>
 
+    <script src="js/redirect.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/header.js"></script>
     <script src="statistiques/sugar.js"></script>

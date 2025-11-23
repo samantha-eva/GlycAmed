@@ -15,7 +15,40 @@
         .charts{
             display: flex;
             flex-direction: column;
-            gap: 5rem;}
+            gap: 5rem;
+        }
+
+        table{
+            border-spacing: 0.5rem;
+        }
+
+        td{
+            width: 20%;
+            padding: 0.5rem 0;
+        }
+
+        .consumption-quantity{
+            text-align: right;
+        }
+
+        .consumption-bar{
+            min-width: 50%;
+            width: 80%;
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            align-items: left;
+            margin: 0 0.5rem;
+        }
+
+        .consumption-bar > div{
+            width: 0;
+            height: 10px;
+            border-radius: 1rem;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+        
     </style>
 </head>
 <body>
@@ -38,8 +71,7 @@
                 <li><a href="/authentification/login.html">Connexion</a></li>
                 <li><a href="/rapport.html">Rapport</a></li>
                 <li><a href="/statistiques.html">Statistiques</a></li>
-                <li><a href="#">Historique</a></li>
-                <li><a href="#">Bilan de santé</a></li>
+                <!-- <li><a href="#">Bilan de santé</a></li> -->
             </ul>
         </nav>
     </header>
@@ -48,9 +80,29 @@
         <p>Contrôler la consommation de sucre, de caféïne et de calorie de votre Amed. Essayez de le convaincre d'éviter le diabète en rapportant chacune de ses consommations.</p>
 
         
-        <a href="">
+        <a href="/rapport.html">
             <button>Je balance mon Amed.</button>
         </a>
+    </section>
+    <section style="margin-top: 5rem;">
+        <h2>Consommation d'aujourd'hui</h2>
+        <table>
+            <tr>
+                <td>Sucre</td>
+                <td class="consumption-bar"> <div id="sugarBar"></div></td>
+                <td class="consumption-quantity"><span id="sugarQuantity">0</span>/50g</td>
+            </tr>
+            <tr>
+                <td>Caféine</td>
+                <td class="consumption-bar"><div id="caffeineBar"></div></td>
+                <td class="consumption-quantity"><span id="caffeineQuantity">0</span>/400mg</td>
+            </tr>
+            <tr>
+                <td>Calorie</td>
+                <td class="consumption-bar"> <div id="calorieBar"></div> </td>
+                <td class="consumption-quantity"><span id="calorieQuantity">0</span>/2000kcal</td>
+            </tr>
+        </table>
     </section>
     <section class="section-graphe">
         <h2> Observer les données de votre Amed :</h2>
@@ -68,7 +120,7 @@
                 <canvas id="myLineChart"></canvas>
             </div>
         </div>
-        <a href="" style="width: 70%; margin: 1rem auto;">
+        <a href="/statistiques.html" style="width: 70%; margin: 1rem auto;">
             <button>Voir ses stats avancées</button>
         </a>
     </section>

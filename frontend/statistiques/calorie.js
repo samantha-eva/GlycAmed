@@ -1,56 +1,139 @@
-const calDaily   = document.getElementById("calorieChartDaily");
-const calWeekly  = document.getElementById("calorieChartWeekly");
+const calDaily = document.getElementById("calorieChartDaily");
+const calWeekly = document.getElementById("calorieChartWeekly");
 const calMonthly = document.getElementById("calorieChartMonthly");
-const calAnnual  = document.getElementById("calorieChartAnnual");
+const calAnnual = document.getElementById("calorieChartAnnual");
 
-const calColor = '#6d5cbc';
+const calColors = {
+  daily: ['#6d5cbc', '#9a84ff', '#5a4ab3'],
+  weekly: ['#6d5cbc', '#9a84ff', '#5a4ab3', '#c8c1ff', '#b19dff', '#7d6add', '#d6cdff'],
+  monthly: ['#6d5cbc', '#9a84ff', '#5a4ab3', '#c8c1ff', '#b19dff'],
+  annual: ['#6d5cbc', '#9a84ff', '#5a4ab3', '#c8c1ff', '#b19dff', '#7d6add', '#d6cdff', '#8673ff', '#6d5cbc', '#a99aff', '#c3b8ff', '#8c7bff']
+};
 
-new Chart(calDaily, {
-  type: 'pie',
-  data: {
-    labels: ['1h','2h','3h','4h', '5h', '6h', '7h', '8h', '9h', '10h', '11h', '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h', '24h'],
-    datasets: [{
-      data: [300, 600, 500, 200, 100, 300, 600, 500, 200, 100, 300, 600, 500, 200, 100, 300, 600, 500, 200, 100, 300, 600, 500, 200],
-      backgroundColor: [calColor, '#9a84ff', '#5a4ab3', '#c8c1ff']
-    }]
+let calorieChartInstances = {
+  daily: null,
+  weekly: null,
+  monthly: null,
+  annual: null
+};
+
+function getCalorieTimeOfDay(date) {
+  const hour = date.getHours();
+  if (hour >= 6 && hour < 12) return 'Matin';
+  if (hour >= 12 && hour < 18) return 'Après-midi';
+  return 'Soir';
+}
+
+function getCalorieDayName(date) {
+  const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+  return days[date.getDay()];
+}
+
+function getCalorieWeekOfMonth(date) {
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  return Math.ceil((date.getDate() + firstDay.getDay()) / 7);
+}
+
+function getCalorieMonthName(date) {
+  const months = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return months[date.getMonth()];
+}
+
+// Fonction pour agréger les données par clé
+function aggregateCalorieData(data, keyFn) {
+  const aggregated = {};
+  data.forEach(item => {
+    const date = new Date(item.when);
+    const key = keyFn(date);
+    if (!aggregated[key]) aggregated[key] = 0;
+    aggregated[key] += item.calories || 0;
+  });
+  return aggregated;
+}
+
+// Fonction pour créer un graphique pie
+function createCalorieChart(canvas, labels, data, colors, chartKey) {
+  if (calorieChartInstances[chartKey]) {
+    calorieChartInstances[chartKey].destroy();
   }
-});
+  calorieChartInstances[chartKey] = new Chart(canvas, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: colors
+      }]
+    }
+  });
+}
 
-new Chart(calWeekly, {
-  type: 'pie',
-  data: {
-    labels: ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],
-    datasets: [{
-      data: [2000,1800,2200,2100,2500,2600,2300],
-      backgroundColor: [calColor, '#9a84ff', '#5a4ab3', '#c8c1ff', '#b19dff', '#7d6add', '#d6cdff']
-    }]
+// Fetch et création des graphiques avec token JWT
+async function fetchAndCreateCalorieChart(period, canvas, labelsOrder, keyFn, colors, chartKey) {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_BASE}?period=${period}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
+    
+    const data = await response.json();
+    const aggregated = aggregateCalorieData(data, keyFn);
+    
+    const chartData = labelsOrder.map(label => aggregated[label] || 0);
+    createCalorieChart(canvas, labelsOrder, chartData, colors, chartKey);
+  } catch (error) {
+    console.error(`Erreur lors du chargement des données calories (${period}):`, error);
   }
-});
+}
 
-new Chart(calMonthly, {
-  type: 'pie',
-  data: {
-    labels: ['S1','S2','S3','S4','S5'],
-    datasets: [{
-      data: [9000,9500,8800,9200,9100],
-      backgroundColor: [calColor, '#9a84ff', '#5a4ab3', '#c8c1ff', '#b19dff']
-    }]
-  }
-});
+// Initialisation des graphiques
+async function initCalorieCharts() {
+  // Daily - Matin, Après-midi, Soir
+  await fetchAndCreateCalorieChart(
+    'today',
+    calDaily,
+    ['Matin', 'Après-midi', 'Soir'],
+    getCalorieTimeOfDay,
+    calColors.daily,
+    'daily'
+  );
 
-new Chart(calAnnual, {
-  type: 'pie',
-  data: {
-    labels: ['Jan','Fev','Mar','Avr','Mai','Juin','Juil','Aou','Sep','Oct','Nov','Dec'],
-    datasets: [{
-      data: [30000,31000,32000,33000,34000,35000,36000,37000,38000,39000,40000,41000],
-      backgroundColor: [
-        calColor,'#9a84ff','#5a4ab3','#c8c1ff','#b19dff','#7d6add',
-        '#d6cdff','#8673ff','#6d5cbc','#a99aff','#c3b8ff','#8c7bff'
-      ]
-    }]
-  }
-});
+  // Weekly - Lundi à Dimanche
+  await fetchAndCreateCalorieChart(
+    'week',
+    calWeekly,
+    ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+    getCalorieDayName,
+    calColors.weekly,
+    'weekly'
+  );
+
+  // Monthly - Semaines 1 à 5
+  await fetchAndCreateCalorieChart(
+    'month',
+    calMonthly,
+    ['S1', 'S2', 'S3', 'S4', 'S5'],
+    (date) => `S${getCalorieWeekOfMonth(date)}`,
+    calColors.monthly,
+    'monthly'
+  );
+
+  // Annual - Jan à Dec
+  await fetchAndCreateCalorieChart(
+    'year',
+    calAnnual,
+    ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'],
+    getCalorieMonthName,
+    calColors.annual,
+    'annual'
+  );
+}
 
 function displayCalorie(id) {
   calDaily.style.display = "none";
@@ -61,4 +144,6 @@ function displayCalorie(id) {
   document.getElementById(id).style.display = "block";
 }
 
+// Initialisation
+initCalorieCharts();
 displayCalorie("calorieChartWeekly");

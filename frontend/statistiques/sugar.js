@@ -3,95 +3,149 @@ const sugarWeekly = document.getElementById("sugarChartWeekly");
 const sugarMonthly = document.getElementById("sugarChartMonthly");
 const sugarAnnual = document.getElementById("sugarChartAnnual");
 
- new Chart(sugarDaily, {
-    type: 'bar',
-    data: {
-      labels: ['1h', '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h', '10h', '11h', '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h', '24h'],
-      datasets: [{
-        label: 'Taux de sucre (g)',
-        data: [5, 10, 8, 9, 7, 6, 5, 4, 3, 2, 1, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-        borderWidth: 1,
-        backgroundColor: '#5cbc6d',
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
+const sugarColor = '#5cbc6d';
+const API_BASE = 'http://localhost:3000/api/consumptions';
+
+let sugarChartInstances = {
+  daily: null,
+  weekly: null,
+  monthly: null,
+  annual: null
+};
+
+// Utilitaires pour grouper les données
+function getTimeOfDay(date) {
+  const hour = date.getHours();
+  if (hour >= 6 && hour < 12) return 'Matin';
+  if (hour >= 12 && hour < 18) return 'Après-midi';
+  return 'Soir';
+}
+
+function getSugarDayName(date) {
+  const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+  return days[date.getDay()];
+}
+
+function getSugarWeekOfMonth(date) {
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  return Math.ceil((date.getDate() + firstDay.getDay()) / 7);
+}
+
+function getSugarMonthName(date) {
+  const months = ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre'];
+  return months[date.getMonth()];
+}
+
+// Fonction pour agréger les données par clé
+function aggregateSugarData(data, keyFn) {
+  const aggregated = {};
+  data.forEach(item => {
+    const date = new Date(item.when);
+    const key = keyFn(date);
+    if (!aggregated[key]) aggregated[key] = 0;
+    aggregated[key] += item.sugar || 0;
   });
+  return aggregated;
+}
 
-  new Chart(sugarWeekly, {
-    type: 'bar',
-    data: {
-      labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
-      datasets: [{
-        label: 'Taux de sucre (g)',
-        data: [12, 100, 50, 70, 60, 80, 75],
-        borderWidth: 1,
-        backgroundColor: '#5cbc6d',
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-
-  new Chart(sugarMonthly, {
-    type: 'bar',
-    data: {
-      labels: ['Semaine 1', 'Semaine 2', 'Semaine 3', 'Semaine 4', 'Semaine 5'],
-      datasets: [{
-        label: 'Taux de sucre (g)',
-        data: [1000, 1200, 800, 1000, 900],
-        borderWidth: 1,
-        backgroundColor: '#5cbc6d',
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-
-  new Chart(sugarAnnual, {
-    type: 'bar',
-    data: {
-      labels: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
-      datasets: [{
-        label: 'Taux de sucre (g)',
-        data: [6000, 6200, 5800, 5900, 6000, 6100, 6200, 6300, 6400, 6500, 6600, 6700],
-        borderWidth: 1,
-        backgroundColor: '#5cbc6d',
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  })
-
-  function displaySugar(id){
-    const chart = document.getElementById(id);
-    
-    sugarAnnual.style.display = "none";
-    sugarMonthly.style.display = "none";
-    sugarWeekly.style.display = "none";
-    sugarDaily.style.display = "none";
-    
-    chart.style.display = "block";
+// Fonction pour créer un graphique
+function createSugarChart(canvas, labels, data, chartKey) {
+  if (sugarChartInstances[chartKey]) {
+    sugarChartInstances[chartKey].destroy();
   }
+  sugarChartInstances[chartKey] = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Taux de sucre (g)',
+        data: data,
+        borderWidth: 1,
+        backgroundColor: sugarColor
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
 
-  displaySugar("sugarChartWeekly");
+// Fetch et création des graphiques avec token JWT
+async function fetchAndCreateSugarChart(period, canvas, labelsOrder, keyFn, chartKey) {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_BASE}?period=${period}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
+    
+    const data = await response.json();
+    const aggregated = aggregateSugarData(data, keyFn);
+    
+    const chartData = labelsOrder.map(label => aggregated[label] || 0);
+    createSugarChart(canvas, labelsOrder, chartData, chartKey);
+  } catch (error) {
+    console.error(`Erreur lors du chargement des données sucre (${period}):`, error);
+  }
+}
+
+// Initialisation des graphiques
+async function initSugarCharts() {
+  // Daily - Matin, Après-midi, Soir
+  await fetchAndCreateSugarChart(
+    'today',
+    sugarDaily,
+    ['Matin', 'Après-midi', 'Soir'],
+    getTimeOfDay,
+    'daily'
+  );
+
+  // Weekly - Lundi à Dimanche
+  await fetchAndCreateSugarChart(
+    'week',
+    sugarWeekly,
+    ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
+    getSugarDayName,
+    'weekly'
+  );
+
+  // Monthly - Semaines 1 à 5
+  await fetchAndCreateSugarChart(
+    'month',
+    sugarMonthly,
+    ['Semaine 1', 'Semaine 2', 'Semaine 3', 'Semaine 4', 'Semaine 5'],
+    (date) => `Semaine ${getSugarWeekOfMonth(date)}`,
+    'monthly'
+  );
+
+  // Annual - Janvier à Décembre
+  await fetchAndCreateSugarChart(
+    'year',
+    sugarAnnual,
+    ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
+    getSugarMonthName,
+    'annual'
+  );
+}
+
+function displaySugar(id) {
+  sugarDaily.style.display = "none";
+  sugarWeekly.style.display = "none";
+  sugarMonthly.style.display = "none";
+  sugarAnnual.style.display = "none";
+
+  document.getElementById(id).style.display = "block";
+}
+
+// Initialisation
+initSugarCharts();
+displaySugar("sugarChartWeekly");

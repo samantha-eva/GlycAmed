@@ -1,69 +1,135 @@
-const cafeDaily   = document.getElementById("cafeChartDaily");
-const cafeWeekly  = document.getElementById("cafeChartWeekly");
+const cafeDaily = document.getElementById("cafeChartDaily");
+const cafeWeekly = document.getElementById("cafeChartWeekly");
 const cafeMonthly = document.getElementById("cafeChartMonthly");
-const cafeAnnual  = document.getElementById("cafeChartAnnual");
+const cafeAnnual = document.getElementById("cafeChartAnnual");
 
 const cafeColor = '#bc6d5c';
 
-new Chart(cafeDaily, {
-  type: 'line',
-  data: {
-    labels: ['1h','2h','3h','4h','5h','6h','7h','8h', '9h', '10h', '11h', '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h', '24h'],
-    datasets: [{
-      label: 'Caféïne (mg)',
-      data: [0, 20, 40, 30, 50, 60, 40, 20, 0, 20, 40, 30, 50, 60, 40, 20, 0, 20, 40, 30, 50, 60, 40, 20],
-      fill: false,
-      borderColor: cafeColor,
-      tension: 0.3,
-      pointBackgroundColor: cafeColor
-    }]
-  }
-});
+let chartInstances = {
+  daily: null,
+  weekly: null,
+  monthly: null,
+  annual: null
+};
 
-new Chart(cafeWeekly, {
-  type: 'line',
-  data: {
-    labels: ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'],
-    datasets: [{
-      label: 'Caféïne (mg)',
-      data: [120,150,180,100,200,50,30],
-      fill: false,
-      borderColor: cafeColor,
-      tension: 0.3,
-      pointBackgroundColor: cafeColor
-    }]
-  }
-});
+// Utilitaires pour grouper les données
+function getTimeOfDay(date) {
+  const hour = date.getHours();
+  if (hour >= 6 && hour < 12) return 'Matin';
+  if (hour >= 12 && hour < 18) return 'Après-midi';
+  return 'Soir';
+}
 
-new Chart(cafeMonthly, {
-  type: 'line',
-  data: {
-    labels: ['S1','S2','S3','S4','S5'],
-    datasets: [{
-      label: 'Caféïne (mg)',
-      data: [500,600,550,700,650],
-      fill: false,
-      borderColor: cafeColor,
-      tension: 0.3,
-      pointBackgroundColor: cafeColor
-    }]
-  }
-});
+function getDayName(date) {
+  const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+  return days[date.getDay()];
+}
 
-new Chart(cafeAnnual, {
-  type: 'line',
-  data: {
-    labels: ['Jan','Fev','Mar','Avr','Mai','Juin','Juil','Aou','Sep','Oct','Nov','Dec'],
-    datasets: [{
-      label: 'Caféïne (mg)',
-      data: [2000,2100,2200,2500,2400,2600,2700,2650,2550,2500,2300,2200],
-      fill: false,
-      borderColor: cafeColor,
-      tension: 0.3,
-      pointBackgroundColor: cafeColor
-    }]
+function getWeekOfMonth(date) {
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  return Math.ceil((date.getDate() + firstDay.getDay()) / 7);
+}
+
+function getMonthName(date) {
+  const months = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return months[date.getMonth()];
+}
+
+// Fonction pour agréger les données par clé
+function aggregateData(data, keyFn) {
+  const aggregated = {};
+  data.forEach(item => {
+    const date = new Date(item.when);
+    const key = keyFn(date);
+    if (!aggregated[key]) aggregated[key] = 0;
+    aggregated[key] += item.caffeine || 0;
+  });
+  return aggregated;
+}
+
+// Fonction pour créer un graphique
+function createChart(canvas, labels, data, chartKey) {
+  if (chartInstances[chartKey]) {
+    chartInstances[chartKey].destroy();
   }
-});
+  chartInstances[chartKey] = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Caféine (mg)',
+        data: data,
+        fill: false,
+        borderColor: cafeColor,
+        tension: 0.3,
+        pointBackgroundColor: cafeColor
+      }]
+    }
+  });
+}
+
+// Fetch et création des graphiques
+async function fetchAndCreateChart(period, canvas, labelsOrder, keyFn, chartKey) {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${API_BASE}?period=${period}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token ? `Bearer ${token}` : ""
+      }
+    });
+
+    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
+    
+    const data = await response.json();
+    const aggregated = aggregateData(data, keyFn);
+    
+    const chartData = labelsOrder.map(label => aggregated[label] || 0);
+    createChart(canvas, labelsOrder, chartData, chartKey);
+  } catch (error) {
+    console.error(`Erreur lors du chargement des données (${period}):`, error);
+  }
+}
+
+// Initialisation des graphiques
+async function initCharts() {
+  // Daily - Matin, Après-midi, Soir
+  await fetchAndCreateChart(
+    'today',
+    cafeDaily,
+    ['Matin', 'Après-midi', 'Soir'],
+    getTimeOfDay,
+    'daily'
+  );
+
+  // Weekly - Lundi à Dimanche
+  await fetchAndCreateChart(
+    'week',
+    cafeWeekly,
+    ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
+    getDayName,
+    'weekly'
+  );
+
+  // Monthly - Semaines 1 à 5
+  await fetchAndCreateChart(
+    'month',
+    cafeMonthly,
+    ['S1', 'S2', 'S3', 'S4', 'S5'],
+    (date) => `S${getWeekOfMonth(date)}`,
+    'monthly'
+  );
+
+  // Annual - Jan à Dec
+  await fetchAndCreateChart(
+    'year',
+    cafeAnnual,
+    ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'],
+    getMonthName,
+    'annual'
+  );
+}
 
 function displayCafe(id) {
   cafeDaily.style.display = "none";
@@ -74,4 +140,6 @@ function displayCafe(id) {
   document.getElementById(id).style.display = "block";
 }
 
+// Initialisation
+initCharts();
 displayCafe("cafeChartWeekly");
