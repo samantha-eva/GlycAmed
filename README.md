@@ -17,6 +17,7 @@ Chaque étudiant peut contribuer en temps réel pour enregistrer ce qu’il obse
 
 ## lancement du serveur
 - docker compose up
+- http://127.0.0.1:8080/
 
 ---
 
