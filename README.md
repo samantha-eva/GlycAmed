@@ -30,3 +30,10 @@ Chaque étudiant peut contribuer en temps réel pour enregistrer ce qu’il obse
 - HTML/ CSS/ JS pour le frontend
 
 ---
+
+## Jeu fausses données
+
+- cd Backend
+- npm run seed
+
+---
