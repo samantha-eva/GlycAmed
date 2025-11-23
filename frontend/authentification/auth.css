@@ -1,0 +1,12 @@
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+form>a{
+    color: var(--secondary)
+}
+form>a:hover{
+    color: var(--accent)
+}

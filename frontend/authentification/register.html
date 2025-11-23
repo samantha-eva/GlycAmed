@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../global.css">
+    <link rel="stylesheet" href="auth.css">
+    <title>Glycamed</title>
+</head>
+<body>
+    <header>
+        <a href="/">
+            <h1>Glycamed</h1>
+        </a>
+        <div class="burgermenu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+
+        <nav class="header-nav">
+            <a href="/">
+                <h1>Glycamed</h1>
+            </a>
+            <ul>
+                <li><a href="/index.html">Accueil</a></li>
+                <li><a href="/authentification/login.html">Connexion</a></li>
+                <li><a href="/rapport.html">Rapport</a></li>
+                <li><a href="/statistiques.html">Statistiques</a></li>
+                <li><a href="#">Historique</a></li>
+                <li><a href="#">Bilan de santé</a></li>
+            </ul>
+        </nav>
+    </header>
+    <form id="registerForm">
+        <h2>Créer un compte</h2>
+
+        <div class="labelinput">
+            <label for="email">Email My Digital School</label>
+            <input 
+                type="email" 
+                id="email" 
+                placeholder="prenom.nom@my-digital-school.org"
+                required
+            >
+        </div>
+        
+        <div class="labelinput">
+            <label for="password">Mot de passe</label>
+            <input 
+                type="password" 
+                id="password" 
+                placeholder="monsupermotdepasse123*"
+                required
+                minlength="6"
+            >
+        </div>
+        
+        <div class="labelinput">
+            <label for="confirm-password">Confirmation du mot de passe</label>
+            <input 
+                type="password" 
+                id="confirm-password" 
+                placeholder="Retapez votre mot de passe"
+                required
+            >
+        </div>
+
+        <a href="/authentification/login.html">
+            Vous possédez déjà un compte ? Connectez-vous ici !
+        </a>
+
+        <button type="submit">S'inscrire</button>
+
+        <p id="successMessage" style="color: green; margin-top: 1rem; display: none;"></p>
+        <p id="errorMessage" style="color: red; margin-top: 1rem;"></p>
+    </form>
+
+    <script src="../js/header.js"></script>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // ✅ Récupérer les valeurs des champs
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm-password').value;
+
+            // Réinitialiser les messages
+            errorMessage.textContent = "";
+            errorMessage.style.display = "none";
+            successMessage.textContent = "";
+            successMessage.style.display = "none";
+
+            // Validation
+            if (password !== confirm) {
+                errorMessage.textContent = "❌ Les mots de passe ne correspondent pas.";
+                errorMessage.style.display = "block";
+                return;
+            }
+
+            if (password.length < 6) {
+                errorMessage.textContent = "❌ Le mot de passe doit contenir au moins 6 caractères.";
+                errorMessage.style.display = "block";
+                return;
+            }
+
+            // ✅ Envoyer SEULEMENT email et password
+            // Le backend extrait automatiquement name et surname depuis l'email
+            const data = {
+                email,
+                password
+            };
+
+            try {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.textContent = "Inscription en cours...";
+                submitBtn.disabled = true;
+
+                const response = await fetch('http://localhost:3000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                console.log("📥 Réponse:", response.status);
+
+                const result = await response.json();
+                console.log("📦 Résultat:", result);
+
+                submitBtn.textContent = "S'inscrire";
+                submitBtn.disabled = false;
+
+                if (!response.ok) {
+                    errorMessage.textContent = `❌ ${result.error || "Une erreur est survenue."}`;
+                    errorMessage.style.display = "block";
+                    return;
+                }
+
+                // ✅ Succès - Stocker le token et les infos user
+                localStorage.setItem("token", result.token);
+                localStorage.setItem("user", JSON.stringify(result.user));
+
+                successMessage.textContent = `✅ Bienvenue ${result.user.name} ${result.user.surname} !`;
+                successMessage.style.display = "block";
+
+                // Redirection après 1.5 secondes
+                setTimeout(() => {
+                    window.location.href = "/dashboard.html";
+                }, 1500);
+                
+            } catch (err) {
+                console.error("❌ Erreur:", err);
+                errorMessage.textContent = "❌ Impossible de se connecter au serveur.";
+                errorMessage.style.display = "block";
+                
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.textContent = "S'inscrire";
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

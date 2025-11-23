@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="statistiques/statistiques.css">
+    <title>Glycamed</title>
+</head>
+<body>
+    <header>
+        <a href="/">
+            <h1>Glycamed</h1>
+        </a>
+        <div class="burgermenu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+
+        <nav class="header-nav">
+            <a href="/">
+                <h1>Glycamed</h1>
+            </a>
+            <ul>
+                <li><a href="/index.html">Accueil</a></li>
+                <li><a href="/authentification/login.html">Connexion</a></li>
+                <li><a href="/rapport.html">Rapport</a></li>
+                <li><a href="/statistiques.html">Statistiques</a></li>
+                <li><a href="#">Historique</a></li>
+                <li><a href="#">Bilan de santé</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <h1 class="titre"> Statistiques avancées : </h1>
+
+    <section class="sucre section-graphe">
+        <h2>Consommation de sucre :</h2>
+
+        <div class="buttons">
+            <button id="dailySugar" onclick="displaySugar('sugarChartDaily')">Jour</button>
+            <button id="weeklySugar" onclick="displaySugar('sugarChartWeekly')">Semaine</button>
+            <button id="monthlySugar" onclick="displaySugar('sugarChartMonthly')">Mois</button>
+            <button id="annualSugar" onclick="displaySugar('sugarChartAnnual')">Année</button>
+        </div>
+
+        <div>
+            <canvas id="sugarChartDaily"></canvas>
+        </div>
+        <div>
+            <canvas id="sugarChartWeekly"></canvas>
+        </div>
+        <div>
+            <canvas id="sugarChartMonthly"></canvas>
+        </div>
+        <div>
+            <canvas id="sugarChartAnnual"></canvas>
+        </div>
+    </section>
+
+    <section class="cafe section-graphe">
+        <h2>Consommation de caféïne :</h2>
+
+        <div class="buttons buttons-cafe">
+            <button id="dailyCafe" onclick="displayCafe('cafeChartDaily')">Jour</button>
+            <button id="weeklyCafe" onclick="displayCafe('cafeChartWeekly')">Semaine</button>
+            <button id="monthlyCafe" onclick="displayCafe('cafeChartMonthly')">Mois</button>
+            <button id="annualCafe" onclick="displayCafe('cafeChartAnnual')">Année</button>
+        </div>
+
+        <div>
+            <canvas id="cafeChartDaily"></canvas>
+        </div>
+        <div>
+            <canvas id="cafeChartWeekly"></canvas>
+        </div>
+        <div>
+            <canvas id="cafeChartMonthly"></canvas>
+        </div>
+        <div>
+            <canvas id="cafeChartAnnual"></canvas>
+        </div>
+    </section>
+
+    <section class="calorie section-graphe">
+        <h2>Consommation de calorie :</h2>
+
+        <div class="buttons buttons-calorie">
+            <button id="dailyCalorie" onclick="displayCalorie('calorieChartDaily')">Jour</button>
+            <button id="weeklyCalorie" onclick="displayCalorie('calorieChartWeekly')">Semaine</button>
+            <button id="monthlyCalorie" onclick="displayCalorie('calorieChartMonthly')">Mois</button>
+            <button id="annualCalorie" onclick="displayCalorie('calorieChartAnnual')">Année</button>
+        </div>
+
+        <div>
+            <canvas id="calorieChartDaily"></canvas>
+        </div>
+        <div>
+            <canvas id="calorieChartWeekly"></canvas>
+        </div>
+        <div>
+            <canvas id="calorieChartMonthly"></canvas>
+        </div>
+        <div>
+            <canvas id="calorieChartAnnual"></canvas>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/header.js"></script>
+    <script src="statistiques/sugar.js"></script>
+    <script src="statistiques/cafe.js"></script>
+    <script src="statistiques/calorie.js"></script>
+</body>
+</html>

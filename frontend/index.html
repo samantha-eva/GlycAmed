@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="global.css">
+    <title>Glycamed</title>
+    <style>
+        .section-graphe{
+            margin-top: 5rem;
+        }
+        .charts{
+            display: flex;
+            flex-direction: column;
+            gap: 5rem;}
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">
+            <h1>Glycamed</h1>
+        </a>
+        <div class="burgermenu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+
+        <nav class="header-nav">
+            <a href="/">
+                <h1>Glycamed</h1>
+            </a>
+            <ul>
+                <li><a href="/index.html">Accueil</a></li>
+                <li><a href="/authentification/login.html">Connexion</a></li>
+                <li><a href="/rapport.html">Rapport</a></li>
+                <li><a href="/statistiques.html">Statistiques</a></li>
+                <li><a href="#">Historique</a></li>
+                <li><a href="#">Bilan de santé</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section class="section-titre">
+        <h2>Bienvenue sur Glycamed</h2>
+        <p>Contrôler la consommation de sucre, de caféïne et de calorie de votre Amed. Essayez de le convaincre d'éviter le diabète en rapportant chacune de ses consommations.</p>
+
+        
+        <a href="">
+            <button>Je balance mon Amed.</button>
+        </a>
+    </section>
+    <section class="section-graphe">
+        <h2> Observer les données de votre Amed :</h2>
+        <div class="charts">
+            <h3>Consommation de sucre sur la semaine :</h3>
+            <div>
+                <canvas id="myChart"></canvas>
+            </div>
+            <h3>Consommation de caféïne sur la semaine :</h3>
+            <div>
+                <canvas id="myPieChart"></canvas>
+            </div>
+            <h3>Prise de calorie sur la semaine :</h3>
+            <div>
+                <canvas id="myLineChart"></canvas>
+            </div>
+        </div>
+        <a href="" style="width: 70%; margin: 1rem auto;">
+            <button>Voir ses stats avancées</button>
+        </a>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>
