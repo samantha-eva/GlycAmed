@@ -15,6 +15,7 @@ Chaque étudiant peut contribuer en temps réel pour enregistrer ce qu’il obse
 
 ---
 
-## Installation et lancement
+## lancement du serveur
+-docker compose up
 
 
