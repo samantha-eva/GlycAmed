@@ -12,10 +12,6 @@ import {
   ConsumptionListItemDTO
 } from "../types/dtos";
 
-// Limites OMS
-//const MAX_SUGAR_PER_DAY = 50; // grammes
-//const MAX_CAFFEINE_PER_DAY = 400; // milligrammes
-
 export class ConsumptionService {
  
   /**
