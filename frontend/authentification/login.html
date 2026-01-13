@@ -60,7 +60,9 @@
 
     <script src="../js/header.js"></script>
 
-    <script>
+    <script type="module">
+        import { CONFIG } from "../config/constants.js";
+
         const loginForm = document.getElementById('loginForm');
         const errorMessage = document.getElementById('errorMessage');
 
@@ -73,7 +75,7 @@
             errorMessage.textContent = "";
 
             try {
-                const response = await fetch('http://localhost:3000/api/auth/login', {
+                const response = await fetch(`${CONFIG.API_URL}/api/auth/login`, {
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json"

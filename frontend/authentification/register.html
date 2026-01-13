@@ -67,9 +67,12 @@
 
     <script src="../js/header.js"></script>
 
-    <script>
+    <script type="module">
+        import { CONFIG } from "../config/constants.js";
+        
         const form = document.getElementById('registerForm');
         const errorMessage = document.getElementById('errorMessage');
+        
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -93,7 +96,7 @@
             };
 
             try {
-                const response = await fetch('http://localhost:3000/api/auth/register', {
+                const response = await fetch(`${CONFIG.API_URL}/api/auth/register`, {
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json"
