@@ -1,3 +1,6 @@
+import { CONFIG } from "../config/constants.js";
+import { ApiService } from "../service/api.service.js";
+
 const cafeDaily = document.getElementById("cafeChartDaily");
 const cafeWeekly = document.getElementById("cafeChartWeekly");
 const cafeMonthly = document.getElementById("cafeChartMonthly");
@@ -11,6 +14,9 @@ let chartInstances = {
   monthly: null,
   annual: null
 };
+
+const API_BASE = `${CONFIG.API_URL}/api/consumptions`;
+
 
 // Utilitaires pour grouper les données
 function getTimeOfDay(date) {
@@ -71,18 +77,8 @@ function createChart(canvas, labels, data, chartKey) {
 // Fetch et création des graphiques
 async function fetchAndCreateChart(period, canvas, labelsOrder, keyFn, chartKey) {
   try {
-    const token = localStorage.getItem("token");
+    const data = await ApiService.get(`/api/consumptions?period=${period}`);
 
-    const response = await fetch(`${API_BASE}?period=${period}`, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": token ? `Bearer ${token}` : ""
-      }
-    });
-
-    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
-    
-    const data = await response.json();
     const aggregated = aggregateData(data, keyFn);
     
     const chartData = labelsOrder.map(label => aggregated[label] || 0);
@@ -143,3 +139,21 @@ function displayCafe(id) {
 // Initialisation
 initCharts();
 displayCafe("cafeChartWeekly");
+
+const cafeButtonDaily = document.getElementById("dailyCafe");
+const cafeButtonWeekly = document.getElementById("weeklyCafe");
+const cafeButtonMonthly = document.getElementById("monthlyCafe");
+const cafeButtonAnnual = document.getElementById("annualCafe");
+
+cafeButtonDaily.addEventListener("click", () => {
+  displayCafe("cafeChartDaily");
+});
+cafeButtonWeekly.addEventListener("click", () => {
+  displayCafe("cafeChartWeekly");
+});
+cafeButtonMonthly.addEventListener("click", () => {
+  displayCafe("cafeChartMonthly");
+});
+cafeButtonAnnual.addEventListener("click", () => {
+  displayCafe("cafeChartAnnual");
+});

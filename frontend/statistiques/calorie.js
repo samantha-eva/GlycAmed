@@ -1,3 +1,6 @@
+import { CONFIG } from "../config/constants.js";
+import { ApiService } from "../service/api.service.js";
+
 const calDaily = document.getElementById("calorieChartDaily");
 const calWeekly = document.getElementById("calorieChartWeekly");
 const calMonthly = document.getElementById("calorieChartMonthly");
@@ -9,6 +12,8 @@ const calColors = {
   monthly: ['#6d5cbc', '#9a84ff', '#5a4ab3', '#c8c1ff', '#b19dff'],
   annual: ['#6d5cbc', '#9a84ff', '#5a4ab3', '#c8c1ff', '#b19dff', '#7d6add', '#d6cdff', '#8673ff', '#6d5cbc', '#a99aff', '#c3b8ff', '#8c7bff']
 };
+
+const API_BASE = `${CONFIG.API_URL}/api/consumptions`;
 
 let calorieChartInstances = {
   daily: null,
@@ -71,18 +76,9 @@ function createCalorieChart(canvas, labels, data, colors, chartKey) {
 // Fetch et création des graphiques avec token JWT
 async function fetchAndCreateCalorieChart(period, canvas, labelsOrder, keyFn, colors, chartKey) {
   try {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${API_BASE}?period=${period}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
     
-    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
-    
-    const data = await response.json();
+    const data = await ApiService.get(`/api/consumptions?period=${period}`);
+        
     const aggregated = aggregateCalorieData(data, keyFn);
     
     const chartData = labelsOrder.map(label => aggregated[label] || 0);
@@ -147,3 +143,21 @@ function displayCalorie(id) {
 // Initialisation
 initCalorieCharts();
 displayCalorie("calorieChartWeekly");
+
+const calorieButtonDaily = document.getElementById("dailyCalorie");
+const calorieButtonWeekly = document.getElementById("weeklyCalorie");
+const calorieButtonMonthly = document.getElementById("monthlyCalorie");
+const calorieButtonAnnual = document.getElementById("annualCalorie");
+
+calorieButtonDaily.addEventListener("click", () => {
+  displayCalorie("calorieChartDaily");
+});
+calorieButtonWeekly.addEventListener("click", () => {
+  displayCalorie("calorieChartWeekly");
+});
+calorieButtonMonthly.addEventListener("click", () => {
+  displayCalorie("calorieChartMonthly");
+});
+calorieButtonAnnual.addEventListener("click", () => {
+  displayCalorie("calorieChartAnnual");
+});

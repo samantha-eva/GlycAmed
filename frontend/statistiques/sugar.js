@@ -1,4 +1,5 @@
 import { CONFIG } from "../config/constants.js";
+import { ApiService } from "../service/api.service.js";
 
 const sugarDaily = document.getElementById("sugarChartDaily");
 const sugarWeekly = document.getElementById("sugarChartWeekly");
@@ -79,22 +80,13 @@ function createSugarChart(canvas, labels, data, chartKey) {
 // Fetch et création des graphiques avec token JWT
 async function fetchAndCreateSugarChart(period, canvas, labelsOrder, keyFn, chartKey) {
   try {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${API_BASE}?period=${period}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
+    const data = await ApiService.get(`/api/consumptions?period=${period}`);
     
-    if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
-    
-    const data = await response.json();
     const aggregated = aggregateSugarData(data, keyFn);
     
     const chartData = labelsOrder.map(label => aggregated[label] || 0);
     createSugarChart(canvas, labelsOrder, chartData, chartKey);
+
   } catch (error) {
     console.error(`Erreur lors du chargement des données sucre (${period}):`, error);
   }
@@ -151,3 +143,21 @@ function displaySugar(id) {
 // Initialisation
 initSugarCharts();
 displaySugar("sugarChartWeekly");
+
+const sugarButtonDaily = document.getElementById("dailySugar");
+const sugarButtonWeekly = document.getElementById("weeklySugar");
+const sugarButtonMonthly = document.getElementById("monthlySugar");
+const sugarButtonAnnual = document.getElementById("annualSugar");
+
+sugarButtonDaily.addEventListener("click", () => {
+  displaySugar("sugarChartDaily");
+});
+sugarButtonWeekly.addEventListener("click", () => {
+  displaySugar("sugarChartWeekly");
+});
+sugarButtonMonthly.addEventListener("click", () => {
+  displaySugar("sugarChartMonthly");
+});
+sugarButtonAnnual.addEventListener("click", () => {
+  displaySugar("sugarChartAnnual");
+});
