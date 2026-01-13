@@ -30,13 +30,11 @@
                 <li><a href="/authentification/login.html">Connexion</a></li>
                 <li><a href="/rapport.html">Rapport</a></li>
                 <li><a href="/statistiques.html">Statistiques</a></li>
-                <!-- <li><a href="#">Bilan de santé</a></li> -->
             </ul>
         </nav>
     </header>
 
     <section>
-
         <form id="registerForm">
             <h2>Make a debut!</h2>
 
@@ -64,15 +62,14 @@
         </form>
     </section>
 
-
     <script src="../js/header.js"></script>
 
     <script type="module">
         import { CONFIG } from "../config/constants.js";
+        import Store from "../js/store/store.js";
         
         const form = document.getElementById('registerForm');
         const errorMessage = document.getElementById('errorMessage');
-        
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -111,10 +108,8 @@
                     return;
                 }
 
-                // ✅ Stocke le JWT
-                localStorage.setItem("token", result.token);
+                Store.login(result.user || { email }, result.token);
 
-                // Redirection (facultative)
                 window.location.href = "/index.html";
                 
             } catch (err) {
