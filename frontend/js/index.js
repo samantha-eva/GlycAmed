@@ -1,9 +1,11 @@
   //Bar
   getTodayConsumption();
 
+import { CONFIG } from "../config/constants.js";
+
 async function getTodayConsumption() {
     try {
-        const response = await fetch('http://localhost:3000/api/consumptions?period=today', {
+        const response = await fetch(`${CONFIG.API_URL}/api/consumptions?period=today`, {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
@@ -27,9 +29,9 @@ async function getTodayConsumption() {
         document.getElementById("calorieQuantity").innerHTML = totalCalories;
 
         // 👉 Barres (pourcentage)
-        let sugarWidth = (totalSugar / 50) * 100;
-        let caffeineWidth = (totalCaffeine / 400) * 100;
-        let calorieWidth = (totalCalories / 2000) * 100;
+        let sugarWidth = (totalSugar / CONFIG.SUGAR_LIMIT) * 100;
+        let caffeineWidth = (totalCaffeine / CONFIG.CAFE_LIMIT) * 100;
+        let calorieWidth = (totalCalories / CONFIG.CALORIE_LIMIT) * 100;
 
         // 👉 On évite les dépassements
         sugarWidth = Math.min(sugarWidth, 100);
@@ -78,7 +80,7 @@ async function getTodayConsumption() {
 const pie = document.getElementById('myPieChart');
 const line = document.getElementById('myLineChart');
 
-const API_BASE = 'http://localhost:3000/api/consumptions';
+const API_BASE = `${CONFIG.API_URL}/api/consumptions`;
 
 let dashboardChartInstances = {
   bar: null,

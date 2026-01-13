@@ -1,10 +1,12 @@
+import { CONFIG } from "../config/constants.js";
+
 const sugarDaily = document.getElementById("sugarChartDaily");
 const sugarWeekly = document.getElementById("sugarChartWeekly");
 const sugarMonthly = document.getElementById("sugarChartMonthly");
 const sugarAnnual = document.getElementById("sugarChartAnnual");
 
 const sugarColor = '#5cbc6d';
-const API_BASE = 'http://localhost:3000/api/consumptions';
+const API_BASE = `${CONFIG.API_URL}/api/consumptions`;
 
 let sugarChartInstances = {
   daily: null,

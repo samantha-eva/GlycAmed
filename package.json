@@ -1,0 +1,25 @@
+{
+  "name": "glycamed",
+  "version": "1.0.0",
+  "description": "**GlycAmed** est une application web collaborative permettant de suivre la consommation de sucre et de caféine d’un étudiant nommé Amed.   Chaque étudiant peut contribuer en temps réel pour enregistrer ce qu’il observe Amed consommer. L’objectif est de sensibiliser Amed à sa consommation et de générer des statistiques et rapports de santé.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samantha-eva/GlycAmed.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samantha-eva/GlycAmed/issues"
+  },
+  "homepage": "https://github.com/samantha-eva/GlycAmed#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.7"
+  },
+  "dependencies": {
+    "@sentry/browser": "^10.33.0"
+  }
+}

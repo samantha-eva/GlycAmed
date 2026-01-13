@@ -1,3 +1,5 @@
+import { CONFIG } from "../config/constants.js";
+
 function postItem(name, quantity, barcode) {
     const modalContent = document.querySelector('.modal-content');
 
@@ -43,7 +45,7 @@ async function postConsumption(barcode, name, quantity) {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/api/consumptions', {
+        const response = await fetch(`${CONFIG.API_URL}/api/consumptions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -88,7 +90,7 @@ function rechercherProduit() {
     const modalContent = document.querySelector('.modal-content');
     modalContent.textContent = "Chargement en cours...";
 
-    fetch(`http://localhost:3000/api/products/search?name=${input}`, {
+    fetch(`${CONFIG.API_URL}/api/products/search?name=${input}`, {
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
@@ -188,7 +190,7 @@ function toMilliliters(input) {
 async function openHistorique(){
 
     try{
-        const response = await fetch('http://localhost:3000/api/consumptions', {
+        const response = await fetch(`${CONFIG.API_URL}/api/consumptions`, {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
