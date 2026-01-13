@@ -154,9 +154,13 @@ function rechercherProduit() {
     });
 }
 
+document.getElementById('rechercherProduit').addEventListener('click', rechercherProduit);
+
 function closeModal() {
     document.querySelector('.modal').style.top = '-100%';
 }
+
+document.getElementById('closeModal').addEventListener('click', closeModal);
 
 function toMilliliters(input) {
 
