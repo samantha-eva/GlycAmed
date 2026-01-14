@@ -43,11 +43,11 @@
 
             <div class="labelinput">
                 <label for="email">Email</label>
-                <input type="email" id="email" placeholder="amed@my-digital-school.org">
+                <input type="email" id="email" placeholder="amed@my-digital-school.org" required>
             </div>
             <div class="labelinput">
                 <label for="password">Mot de passe</label>
-                <input type="password" id="password" placeholder="monsupermotdepasse123*">
+                <input type="password" id="password" placeholder="monsupermotdepasse123*" required>
             </div>
             <div class="labelinput">
                 <label for="confirm-password">Confirmation du mot de passe</label>
@@ -63,6 +63,7 @@
     </section>
 
     <script src="../js/header.js"></script>
+    <script type="module" src="../js/header-component.js"></script>
 
     <script type="module">
         import { CONFIG } from "../config/constants.js";
@@ -74,12 +75,20 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirm = document.getElementById('confirm-password').value;
+            // .trim() permet d'ignorer les espaces inutiles
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const confirm = document.getElementById('confirm-password').value.trim();
 
             errorMessage.textContent = "";
 
+            // 1. Vérification si les champs sont vides
+            if (!email || !password || !confirm) {
+                errorMessage.textContent = "Veuillez remplir tous les champs.";
+                return;
+            }
+
+            // 2. Vérification de la correspondance des mots de passe
             if (password !== confirm) {
                 errorMessage.textContent = "Les mots de passe ne correspondent pas.";
                 return;

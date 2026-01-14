@@ -11,30 +11,7 @@
     <title>Glycamed</title>
 </head>
 <body>
-    <header>
-        <a href="/">
-            <h1>Glycamed</h1>
-        </a>
-        <div class="burgermenu">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
-
-        <nav class="header-nav">
-            <a href="/">
-                <h1>Glycamed</h1>
-            </a>
-            <ul>
-                <li><a href="/index.html">Accueil</a></li>
-                <li><a href="/authentification/login.html">Connexion</a></li>
-                <li><a href="/rapport.html">Rapport</a></li>
-                <li><a href="/statistiques.html">Statistiques</a></li>
-                <!-- <li><a href="#">Bilan de santé</a></li> -->
-            </ul>
-        </nav>
-    </header>
-    
+    <header-component></header-component>
     
     <section class="sucre section-graphe">
         <h2 class="titre"> Statistiques avancées : </h2>
@@ -112,6 +89,7 @@
     <script src="js/redirect.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/header.js"></script>
+    <script type="module" src="js/header-component.js"></script>
     <script type="module" src="statistiques/sugar.js"></script>
     <script type="module" src="statistiques/cafe.js"></script>
     <script type="module" src="statistiques/calorie.js"></script>
