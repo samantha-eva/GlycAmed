@@ -20,12 +20,12 @@
 
             <div class="labelinput">
                 <label for="email">Email</label>
-                <input type="email" id="email" placeholder="amed@my-digital-school.org">
+                <input type="email" id="email" placeholder="amed@my-digital-school.org" required>
             </div>
 
             <div class="labelinput">
                 <label for="password">Mot de passe</label>
-                <input type="password" id="password" placeholder="monsupermotdepasse123*">
+                <input type="password" id="password" placeholder="monsupermotdepasse123*" required>
             </div>
 
             <a href="/authentification/register.html">Si vous n'êtes pas enregistré, faites le ici !</a>
@@ -46,12 +46,20 @@
         const errorMessage = document.getElementById('errorMessage');
 
         loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Empêche le rechargement
+            e.preventDefault(); // Empêche le rechargement de la page
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
 
+            // Réinitialisation du message d'erreur
             errorMessage.textContent = "";
+
+            // --- NOUVELLE VÉRIFICATION ---
+            if (!email || !password) {
+                errorMessage.textContent = "Veuillez remplir tous les champs (email et mot de passe).";
+                return; // On arrête l'exécution ici, le fetch ne sera pas lancé
+            }
+            // ------------------------------
 
             try {
                 const response = await fetch(`${CONFIG.API_URL}/api/auth/login`, {
@@ -69,10 +77,7 @@
                     return;
                 }
 
-                // ✔ Stocke le JWT côté front
                 localStorage.setItem("token", result.token);
-
-                // ✔ Redirection vers l'accueil
                 window.location.href = "/index.html";
 
             } catch (err) {
