@@ -2,6 +2,53 @@ import { CONFIG } from '../config/constants.js';
 import Store from '../js/store/store.js'; 
 
 export const ApiService = {
+
+  async login(email, password) {
+    try {
+        const response = await fetch(`${CONFIG.API_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, password })
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(result.error || result.message || "Identifiants incorrects.");
+        }
+        
+        Store.login(result.user || { email }, result.token);
+        
+    } catch (error) {
+      throw(error)
+    }
+  },
+
+  async register(userData) {
+    try {
+          const response = await fetch(`${CONFIG.API_URL}/api/auth/register`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(userData)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || result.message || "Informations incorrectes.");
+        }
+
+        Store.login(result.user || { email }, result.token);
+
+        window.location.href = "/index.html";
+    } catch (error) {
+      throw error;
+    }
+  },
   async request(endpoint, options = {}) {
     const token = Store.getToken();  
 
