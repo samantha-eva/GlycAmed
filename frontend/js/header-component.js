@@ -24,6 +24,7 @@ class HeaderComponent extends HTMLElement {
                     <ul>
                         <li><a href="/index.html">Accueil</a></li>
                         <li><a href="/authentification/login.html">Connexion</a></li>
+                        <li><a href="/authentification/register.html">Inscription</a></li>
                         <li><a href="/rapport.html">Rapport</a></li>
                         <li><a href="/statistiques.html">Statistiques</a></li>
                     </ul>
