@@ -11,11 +11,30 @@
     <title>Glycamed</title>
 </head>
 <body>
-    
-    <header-component></header-component>
+    <header>
+        <a href="/">
+            <h1>Glycamed</h1>
+        </a>
+        <div class="burgermenu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+
+        <nav class="header-nav">
+            <a href="/">
+                <h1>Glycamed</h1>
+            </a>
+            <ul>
+                <li><a href="/index.html">Accueil</a></li>
+                <li><a href="/authentification/login.html">Connexion</a></li>
+                <li><a href="/rapport.html">Rapport</a></li>
+                <li><a href="/statistiques.html">Statistiques</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <section>
-
         <form id="registerForm">
             <h2>Make a debut!</h2>
 
@@ -43,16 +62,16 @@
         </form>
     </section>
 
-
     <script src="../js/header.js"></script>
     <script type="module" src="../js/header-component.js"></script>
 
     <script type="module">
         import { CONFIG } from "../config/constants.js";
+        import Store from "../js/store/store.js";
         
         const form = document.getElementById('registerForm');
         const errorMessage = document.getElementById('errorMessage');
-        
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -98,7 +117,8 @@
                     return;
                 }
 
-                localStorage.setItem("token", result.token);
+                Store.login(result.user || { email }, result.token);
+
                 window.location.href = "/index.html";
                 
             } catch (err) {

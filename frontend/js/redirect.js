@@ -1,5 +1,7 @@
-const token = localStorage.getItem("token");
+import Store from "./store/store.js";
 
-if (!token) {
-    window.location.href = "login.html";
+const { isAuthenticated } = Store.getState();
+
+if (!isAuthenticated) {
+  window.location.href = "/authentification/login.html";
 }
