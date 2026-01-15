@@ -10,9 +10,20 @@ export class AuthService {
       throw new Error('Cet email est déjà utilisé');
     }
 
+    // ✨ NOUVELLE LOGIQUE : Extraire name/surname si non fournis
+    let name = data.name;
+    let surname = data.surname;
+    
+    if (!name || !surname) {
+      const extracted = extractNameFromEmail(data.email);
+      name = name || extracted.name;
+      surname = surname || extracted.surname;
+    }
+
+    // Créer l'utilisateur
     const user = new UserModel({
-      name: data.name,
-      surname: data.surname,
+      name,
+      surname,
       email: data.email,
       password: data.password, 
     });

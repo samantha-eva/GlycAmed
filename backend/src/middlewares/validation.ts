@@ -7,17 +7,9 @@ export const validateRegister = (
   res: Response,
   next: NextFunction
 ): void => {
-  const { name, surname, email, password } = req.body as RegisterDTO;
+  const { email, password } = req.body as RegisterDTO;
 
   const errors: string[] = [];
-
-  if (!name || name.trim().length === 0) {
-    errors.push('Le prénom est requis');
-  }
-
-  if (!surname || surname.trim().length === 0) {
-    errors.push('Le nom est requis');
-  }
 
   if (!email || !email.match(/^\S+@\S+\.\S+$/)) {
     errors.push('Email invalide');
