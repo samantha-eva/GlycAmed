@@ -1,3 +1,4 @@
+import * as Sentry from "https://esm.sh/@sentry/browser";     
 import { CONFIG } from '../config/constants.js';
 import Store from '../js/store/store.js'; 
 
@@ -20,6 +21,15 @@ export const ApiService = {
         }
         
         Store.login(result.user || { email }, result.token);
+
+
+
+        Sentry.setUser({
+          id: user.id,
+          email: user.email,
+          username: user.firstName,
+        });
+
         
     } catch (error) {
       throw(error)
