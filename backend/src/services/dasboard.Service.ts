@@ -1,9 +1,10 @@
 import { ConsumptionModel } from "../models/consumption";
 import { DashboardDTO } from "../types/dtos";
+import { CONFIG } from "../config/constants";
 
 // Limites OMS
-const MAX_SUGAR_PER_DAY = 50; // grammes
-const MAX_CAFFEINE_PER_DAY = 400; // milligrammes
+const MAX_SUGAR_PER_DAY =  CONFIG.SUGAR_LIMIT;
+const MAX_CAFFEINE_PER_DAY = CONFIG.SUGAR_LIMIT;
 
 export class DashboardService {
   /**
@@ -36,11 +37,11 @@ export class DashboardService {
     ]);
 
     // Si aucune consommation aujourd'hui, retourner des valeurs par défaut
-    const data = stats[0] || {
-      totalSugar: 0,
-      totalCaffeine: 0,
-      totalCalories: 0,
-      contributionsCount: 0,
+    const data = stats[CONFIG.DEFAULT] || {
+      totalSugar: CONFIG.DEFAULT,
+      totalCaffeine: CONFIG.DEFAULT,
+      totalCalories: CONFIG.DEFAULT,
+      contributionsCount: CONFIG.DEFAULT,
     };
 
     // Calculer les pourcentages

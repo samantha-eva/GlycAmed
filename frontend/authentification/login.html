@@ -11,92 +11,53 @@
     <title>Glycamed</title>
 </head>
 <body>
-    <header>
-        <a href="/">
-            <h1>Glycamed</h1>
-        </a>
-        <div class="burgermenu">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
-
-        <nav class="header-nav">
-            <a href="/">
-                <h1>Glycamed</h1>
-            </a>
-            <ul>
-                <li><a href="/index.html">Accueil</a></li>
-                <li><a href="/authentification/login.html">Connexion</a></li>
-                <li><a href="/rapport.html">Rapport</a></li>
-                <li><a href="/statistiques.html">Statistiques</a></li>
-                <!-- <li><a href="#">Bilan de santé</a></li> -->
-            </ul>
-        </nav>
-    </header>
+    <header-component></header-component>
+    
     <section>
-
         <form id="loginForm">
-            
             <h2>Se connecter</h2>
-
             <div class="labelinput">
                 <label for="email">Email</label>
-                <input type="email" id="email" placeholder="amed@my-digital-school.org">
+                <input type="email" id="email" placeholder="amed@my-digital-school.org" required>
             </div>
-
             <div class="labelinput">
                 <label for="password">Mot de passe</label>
-                <input type="password" id="password" placeholder="monsupermotdepasse123*">
+                <input type="password" id="password" placeholder="monsupermotdepasse123*" required>
             </div>
-
             <a href="/authentification/register.html">Si vous n'êtes pas enregistré, faites le ici !</a>
-
             <button type="submit">Se connecter</button>
-
             <p id="errorMessage" style="color:red; margin-top:1rem;"></p>
         </form>
     </section>
-
+    
     <script src="../js/header.js"></script>
-
-    <script>
+    <script type="module" src="../js/header-component.js"></script>
+    <script type="module">
+        import { CONFIG } from "../config/constants.js";
+        import { ApiService } from "../service/api.service.js";
+        import Store from "../js/store/store.js";
+        
         const loginForm = document.getElementById('loginForm');
         const errorMessage = document.getElementById('errorMessage');
-
+        
         loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Empêche le rechargement
-
+            e.preventDefault();
+            
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-
             errorMessage.textContent = "";
 
+            // --- NOUVELLE VÉRIFICATION ---
+            if (!email || !password) {
+                errorMessage.textContent = "Veuillez remplir tous les champs (email et mot de passe).";
+                return; // On arrête l'exécution ici, le fetch ne sera pas lancé
+            }
+            
             try {
-                const response = await fetch('http://localhost:3000/api/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const result = await response.json();
-
-                if (!response.ok) {
-                    errorMessage.textContent = result.message || "Identifiants incorrects.";
-                    return;
-                }
-
-                // ✔ Stocke le JWT côté front
-                localStorage.setItem("token", result.token);
-
-                // ✔ Redirection vers l'accueil
+                await ApiService.login(email, password);
                 window.location.href = "/index.html";
-
             } catch (err) {
-                errorMessage.textContent = "Impossible de contacter le serveur.";
-                console.error(err);
+                errorMessage.textContent = err.message;
             }
         });
     </script>

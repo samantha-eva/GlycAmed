@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <script
+  src="https://js-de.sentry-cdn.com/acc81f8c6f8d21b321dc53210654f221.min.js"
+  crossorigin="anonymous"
+></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,29 +56,7 @@
     </style>
 </head>
 <body>
-    <header>
-        <a href="/">
-            <h1>Glycamed</h1>
-        </a>
-        <div class="burgermenu">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
-
-        <nav class="header-nav">
-            <a href="/">
-                <h1>Glycamed</h1>
-            </a>
-            <ul>
-                <li><a href="/index.html">Accueil</a></li>
-                <li><a href="/authentification/login.html">Connexion</a></li>
-                <li><a href="/rapport.html">Rapport</a></li>
-                <li><a href="/statistiques.html">Statistiques</a></li>
-                <!-- <li><a href="#">Bilan de santé</a></li> -->
-            </ul>
-        </nav>
-    </header>
+    <header-component></header-component>
     <section class="section-titre">
         <h2>Bienvenue sur Glycamed</h2>
         <p>Contrôler la consommation de sucre, de caféïne et de calorie de votre Amed. Essayez de le convaincre d'éviter le diabète en rapportant chacune de ses consommations.</p>
@@ -127,6 +109,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/header.js"></script>
-    <script src="js/index.js"></script>
+    <script type="module" src="js/header-component.js"></script>
+    <script type="module" src="js/index.js"></script>
 </body>
 </html>

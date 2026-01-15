@@ -1,15 +1,10 @@
 import { UserModel } from '../models/user';
 import { RegisterDTO, LoginDTO, AuthResponseDTO } from '../types/dtos';
 import { generateToken } from '../utils/jwt';
-import { extractNameFromEmail } from '../utils/nameExtractor';
+import bcrypt from 'bcrypt';
 
 export class AuthService {
-  /**
-   * Inscription
-   * Si name/surname ne sont pas fournis, ils sont extraits de l'email
-   */
   static async register(data: RegisterDTO): Promise<AuthResponseDTO> {
-    // Vérifier si l'email existe déjà
     const existingUser = await UserModel.findOne({ email: data.email });
     if (existingUser) {
       throw new Error('Cet email est déjà utilisé');
@@ -30,12 +25,11 @@ export class AuthService {
       name,
       surname,
       email: data.email,
-      password: data.password,
+      password: data.password, 
     });
 
     await user.save();
 
-    // Générer le token JWT
     const token = generateToken(user._id.toString());
 
     return {
@@ -49,10 +43,14 @@ export class AuthService {
     };
   }
 
-  // Connexion (pas de changement)
   static async login(data: LoginDTO): Promise<AuthResponseDTO> {
     const user = await UserModel.findOne({ email: data.email });
     if (!user) {
+      throw new Error('Email ou mot de passe incorrect');
+    }
+
+    const isValid = await bcrypt.compare(data.password, user.password);
+    if (!isValid) {
       throw new Error('Email ou mot de passe incorrect');
     }
 

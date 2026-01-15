@@ -1,3 +1,5 @@
+import { CONFIG } from "../config/constants.js";
+
 function postItem(name, quantity, barcode) {
     const modalContent = document.querySelector('.modal-content');
 
@@ -43,7 +45,7 @@ async function postConsumption(barcode, name, quantity) {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/api/consumptions', {
+        const response = await fetch(`${CONFIG.API_URL}/api/consumptions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -88,7 +90,7 @@ function rechercherProduit() {
     const modalContent = document.querySelector('.modal-content');
     modalContent.textContent = "Chargement en cours...";
 
-    fetch(`http://localhost:3000/api/products/search?name=${input}`, {
+    fetch(`${CONFIG.API_URL}/api/products/search?name=${input}`, {
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
@@ -112,49 +114,41 @@ function rechercherProduit() {
 
         const json = await response.json();
 
-        if (!json.products || json.products.length === 0) {
-            modalContent.textContent = "Aucun produit trouvé.";
-            return;
-        }
+if (!json.products || json.products.length === 0) {
+    modalContent.textContent = "Aucun produit trouvé.";
+    return;
+}
 
-        const container = document.createElement("div");
-        container.classList.add("modal-container");
+const container = document.createElement("div");
+container.classList.add("modal-container");
 
-        json.products.forEach(product => {
-            const card = document.createElement("div");
-            const img = document.createElement("img");
+json.products.forEach(product => {
+    // On crée simplement notre nouvelle balise personnalisée
+    const card = document.createElement("product-card");
+    
+    // On lui passe les données via les attributs
+    card.setAttribute('name', product.name);
+    card.setAttribute('quantity', product.quantity);
+    card.setAttribute('image', product.image_url);
+    card.setAttribute('barcode', product.barcode);
 
-            img.src = product.image_url;
-            img.alt = product.product_name;
+    container.appendChild(card);
+});
 
-            const title = document.createElement("p");
-            title.textContent = product.name + " - " + product.quantity;
-
-            // CORRECTION DES ARGUMENTS :
-            card.onclick = () => {
-                postItem(
-                    product.name,         // name
-                    product.quantity,     // quantity
-                    product.barcode       // barcode
-                );
-            };
-
-            card.appendChild(img);
-            card.appendChild(title);
-
-            container.appendChild(card);
-        });
-
-        modalContent.appendChild(container);
+modalContent.appendChild(container);
     })
     .catch(err => {
         modalContent.textContent = "Erreur réseau : " + err.message;
     });
 }
 
+document.getElementById('rechercherProduit').addEventListener('click', rechercherProduit);
+
 function closeModal() {
     document.querySelector('.modal').style.top = '-100%';
 }
+
+document.getElementById('closeModal').addEventListener('click', closeModal);
 
 function toMilliliters(input) {
 
@@ -188,7 +182,7 @@ function toMilliliters(input) {
 async function openHistorique(){
 
     try{
-        const response = await fetch('http://localhost:3000/api/consumptions', {
+        const response = await fetch(`${CONFIG.API_URL}/api/consumptions`, {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
