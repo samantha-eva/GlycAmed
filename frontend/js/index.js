@@ -1,3 +1,11 @@
+import { configSentry } from "../config/configSentry.js";
+import * as Sentry from "https://esm.sh/@sentry/browser";
+
+Sentry.init({
+  dsn: configSentry.DSN,
+  sendDefaultPii: true
+});
+
 import { CONFIG } from "../config/constants.js";
 import Store from "./store/store.js"; 
 
